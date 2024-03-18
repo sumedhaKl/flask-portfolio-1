@@ -15,6 +15,8 @@ print("Titanic Data")
 print(titanic_data.columns) # titanic data set
 display(titanic_data[['survived','pclass', 'sex', 'age', 'sibsp', 'parch', 'class', 'fare', 'embark_town', 'alone']]) # look at selected columns
 
+# Preprocess the data
+
 td = titanic_data
 td.drop(['alive', 'who', 'adult_male', 'class', 'embark_town', 'deck'], axis=1, inplace=True)
 td.dropna(inplace=True) # drop rows with at least one missing value, after dropping unuseful columns
