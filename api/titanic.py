@@ -9,12 +9,6 @@ from sklearn.preprocessing import OneHotEncoder
 # Load the titanic dataset
 titanic_data = sns.load_dataset('titanic')
 
-print("Titanic Data")
-
-
-print(titanic_data.columns) # titanic data set
-display(titanic_data[['survived','pclass', 'sex', 'age', 'sibsp', 'parch', 'class', 'fare', 'embark_town', 'alone']]) # look at selected columns  # noqa: F821
-
 # Preprocess the data
 
 td = titanic_data
@@ -31,18 +25,6 @@ cols = ['embarked_' + val for val in enc.categories_[0]]
 td[cols] = pd.DataFrame(onehot)
 td.drop(['embarked'], axis=1, inplace=True)
 td.dropna(inplace=True) # drop rows with at least one missing value, after preparing the data
-
-print(td.columns)
-display(td)  # noqa: F821
-
-print(titanic_data.median())
-print(titanic_data.query("survived == 0").mean())
-print(td.query("survived == 1").mean())
-print("maximums for survivors")
-print(td.query("survived == 1").max())
-print()
-print("minimums for survivors")
-print(td.query("survived == 1").min())
 
 # Build distinct data frames on survived column
 X = td.drop('survived', axis=1) # all except 'survived'
