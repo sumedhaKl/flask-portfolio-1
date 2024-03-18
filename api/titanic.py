@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import OneHotEncoder
 
 # Load the titanic dataset
 titanic_data = sns.load_dataset('titanic')
@@ -13,9 +14,6 @@ print("Titanic Data")
 
 print(titanic_data.columns) # titanic data set
 display(titanic_data[['survived','pclass', 'sex', 'age', 'sibsp', 'parch', 'class', 'fare', 'embark_town', 'alone']]) # look at selected columns
-
-# Preprocess the data
-from sklearn.preprocessing import OneHotEncoder
 
 td = titanic_data
 td.drop(['alive', 'who', 'adult_male', 'class', 'embark_town', 'deck'], axis=1, inplace=True)
