@@ -40,12 +40,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 
 # Train a decision tree classifier
 dt = DecisionTreeClassifier()
-dt.fit(X_train, y_train)
-
-# Test the model
-y_pred = dt.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print('DecisionTreeClassifier Accuracy: {:.2%}'.format(accuracy))  
+dt.fit(X_train, y_train) 
 
 # Train a logistic regression model
 logreg = LogisticRegression()
@@ -54,4 +49,3 @@ logreg.fit(X_train, y_train)
 # Test the model
 y_pred = logreg.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
-print('LogisticRegression Accuracy: {:.2%}'.format(accuracy))  
