@@ -2,7 +2,7 @@ def initTitanicData():
     print("Titanic Data")
 
 
-print(titanic_data.columns) # titanic data set
+    print(titanic_data.columns) # titanic data set
 display(titanic_data[['survived','pclass', 'sex', 'age', 'sibsp', 'parch', 'class', 'fare', 'embark_town', 'alone']]) # look at selected columns  # noqa: F821
 print(td.columns)
 display(td)  # noqa: F821
