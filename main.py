@@ -55,6 +55,8 @@ def before_request():
 # Create an AppGroup for custom commands
 custom_cli = AppGroup('custom', help='Custom commands')
 
+initTitanicData()
+
 # Define a command to generate data
 @custom_cli.command('generate_data')
 def generate_data():
