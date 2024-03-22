@@ -18,4 +18,4 @@ instance/volumes/sqlite-backup.db
 instance/volumes/sqlite-backup*
 migrations/
 
-devenv
+devenv/
