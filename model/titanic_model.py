@@ -94,6 +94,6 @@ def initTitanicData():
     td[cols] = pd.DataFrame(onehot)
     td.drop(['embarked'], axis=1, inplace=True)
     td.dropna(inplace=True) # drop rows with at least one missing value, after preparing the data
-    # Build distinct data frames on survived column
-    X = td.drop('survived', axis=1) # all except 'survived'
-    y = td['survived'] # only 'survived'
+# Build distinct data frames on survived column
+X = ('survived', axis=1) # all except 'survived'
+y = ['survived'] # only 'survived'
