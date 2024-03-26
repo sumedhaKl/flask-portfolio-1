@@ -6,7 +6,6 @@ from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 from __init__ import db  # Definitions initialization
 
-
 class predict(db.Model):
     def Predict():
         # Logistic regression model is used to predict the probability
@@ -48,21 +47,32 @@ class predict(db.Model):
         logreg = LogisticRegression()
         logreg.fit(X_train, y_train)
 
-    def _train(logreg):
-            # split the data into features and target
-            X = self.titanic_data[self.features]
-            y = self.titanic_data[self.target]
+    def __init__(self):
+        # the titanic ML model
+        self.model = None
+        self.dt = None
+        # define ML features and target
+        self.features = ['pclass', 'sex', 'age', 'sibsp', 'parch', 'fare', 'alone']
+        self.target = 'survived'
+        # load the titanic dataset
+        self.titanic_data = sns.load_dataset('titanic')
+        # one-hot encoder used to encode 'embarked' column
+        self.encoder = OneHotEncoder(handle_unknown='ignore')
+
+        def _train(logreg):
+                # split the data into features and target
+                X = self.titanic_data[self.features]
+                y = self.titanic_data[self.target]
+                
+                # perform train-test split
+                self.model = LogisticRegression(max_iter=1000)
+                
+                # train the model
+                self.model.fit(X, y)
+                
+                # train a decision tree classifier
+                self.dt.fit(X, y)
             
-            # perform train-test split
-            self.model = LogisticRegression(max_iter=1000)
-            
-            # train the model
-            self.model.fit(X, y)
-            
-            # train a decision tree classifier
-            self.dt = DecisionTreeClassifier()
-            self.dt.fit(X, y)
-        
         # Predict the survival probability for the new passenger
         dead_proba, alive_proba = np.squeeze(logreg.predict_proba(new_passenger))
     
