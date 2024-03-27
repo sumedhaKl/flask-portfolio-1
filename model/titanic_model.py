@@ -42,6 +42,9 @@ class predict(db.Model):
         logreg.fit(X_train, y_train)
 
         return logreg.predict(new_passenger)
+    
+        # Predict the survival probability for the new passenger
+        dead_proba, alive_proba = np.squeeze(logreg.predict_proba(new_passenger))
 
     def __init__(self):
         # the titanic ML model
@@ -68,9 +71,6 @@ class predict(db.Model):
                 
                 # train a decision tree classifier
                 self.dt.fit(X, y)
-            
-        # Predict the survival probability for the new passenger
-    dead_proba, alive_proba = np.squeeze(logreg.predict_proba(new_passenger))
     
 def initTitanicData():
       # Load the titanic dataset
