@@ -6,30 +6,30 @@ from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 from __init__ import db  # Definitions initialization
 
-class predict(db.Model):
-    def Predict(f_data):
-        # Logistic regression model is used to predict the probability
+class Predict(db.Model):
+    id = db.Column(db.Integer, primary_key=True)  # Adding primary key column
 
-        if type(f_data) != type(pd.DataFrame({})):
+    @staticmethod
+    def predict(f_data):
+        # Logistic regression model is used to predict the probability
+        if not isinstance(f_data, pd.DataFrame):
             return -1
 
-        passenger = f_data
+        passenger = f_data.copy()
 
-        new_passenger = passenger.copy()
+        # Preprocess the new passenger data
+        passenger['sex'] = passenger['sex'].apply(lambda x: 1 if x == 'male' else 0)
+        passenger['alone'] = passenger['alone'].apply(lambda x: 1 if x else 0)
 
-            # Preprocess the new passenger data
-        new_passenger['sex'] = new_passenger['sex'].apply(lambda x: 1 if x == 'male' else 0)
-        new_passenger['alone'] = new_passenger['alone'].apply(lambda x: 1 if x == True else 0)
-
-            # Encode 'embarked' variable
+        # Encode 'embarked' variable
         enc = OneHotEncoder(handle_unknown='ignore')
-        onehot = enc.transform(new_passenger[['embarked']]).toarray()
+        onehot = enc.transform(passenger[['embarked']]).toarray()
         cols = ['embarked_' + val for val in enc.categories_[0]]
-        new_passenger[cols] = pd.DataFrame(onehot, index=new_passenger.index)
-        new_passenger.drop(['name'], axis=1, inplace=True)
-        new_passenger.drop(['embarked'], axis=1, inplace=True)
+        passenger[cols] = pd.DataFrame(onehot, index=passenger.index)
+        passenger.drop(['name'], axis=1, inplace=True)
+        passenger.drop(['embarked'], axis=1, inplace=True)
 
-        # Split arrays in random train 70%, random test 30%, using stratified sampling (same proportion of survived in both sets) and a fixed random state (42
+        # Split arrays in random train 70%, random test 30%, using stratified sampling (same proportion of survived in both sets) and a fixed random state (42)
         # The number 42 is often used in examples and tutorials because of its cultural significance in fields like science fiction (it's the "Answer to the Ultimate Question of Life, The Universe, and Everything" in The Hitchhiker's Guide to the Galaxy by Douglas Adams). But in practice, the actual value doesn't matter; what's important is that it's set to a consistent value.
         # X_train is the DataFrame containing the features for the training set.
         # X_test is the DataFrame containing the features for the test set.
@@ -41,10 +41,10 @@ class predict(db.Model):
         logreg = LogisticRegression()
         logreg.fit(X_train, y_train)
 
-        return logreg.predict(new_passenger)
+        return logreg.predict(passenger)
     
         # Predict the survival probability for the new passenger
-        dead_proba, alive_proba = np.squeeze(logreg.predict_proba(new_passenger))
+        dead_proba, alive_proba = np.squeeze(logreg.predict_proba(passenger))
 
     def __init__(self):
         # the titanic ML model
