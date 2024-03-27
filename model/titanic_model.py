@@ -7,19 +7,13 @@ import numpy as np
 from __init__ import db  # Definitions initialization
 
 class predict(db.Model):
-    def Predict():
+    def Predict(f_data):
         # Logistic regression model is used to predict the probability
-        passenger = pd.DataFrame({
-            'name': ['Sumedha Kamaraju'],
-            'pclass': [2], # 2nd class picked as it was median, bargains are my preference, but I don't want to have poor accomodations
-            'sex': ['female'],
-            'age': [17],
-            'sibsp': [0], # I usually travel with my wife
-            'parch': [2], # currenly I have 1 child at home
-            'fare': [16.00], # median fare picked assuming it is 2nd class
-            'embarked': ['S'], # majority of passengers embarked in Southampton
-            'alone': [False] # travelling with family (spouse and child))
-        })
+
+        if type(f_data) != type(pd.DataFrame({})):
+            return -1
+
+        passenger = f_data
 
         new_passenger = passenger.copy()
 
@@ -46,6 +40,8 @@ class predict(db.Model):
         # Train a logistic regression model
         logreg = LogisticRegression()
         logreg.fit(X_train, y_train)
+
+        return logreg.predict(new_passenger)
 
     def __init__(self):
         # the titanic ML model
@@ -95,5 +91,5 @@ def initTitanicData():
     td.drop(['embarked'], axis=1, inplace=True)
     td.dropna(inplace=True) # drop rows with at least one missing value, after preparing the data
 # Build distinct data frames on survived column
-X = ('survived', axis=1) # all except 'survived'
+X = ('survived') # all except 'survived'
 y = ['survived'] # only 'survived'
