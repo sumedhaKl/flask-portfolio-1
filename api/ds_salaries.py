@@ -16,7 +16,7 @@ class Predict(Resource):
             
             # Preprocesssing
             salary_data['sex'] = salary_data['sex'].apply(lambda x: 1 if x == 'male' else 0)
-            salary_data['alone'] = salary_data['alone'].apply(lambda x: 1 if x == True else 0)
+            salary_data['alone'] = salary_data['alone'].apply(lambda x: 1 if x else 0)
             enc = OneHotEncoder(handle_unknown='ignore')
             onehot = enc.transform(salary_data[['embarked']]).toarray()
             cols = ['embarked_' + val for val in enc.categories_[0]]
