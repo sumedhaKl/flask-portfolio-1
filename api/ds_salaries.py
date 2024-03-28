@@ -6,7 +6,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
 
 app = Flask(__name__)
-salaries_api = Blueprint('slaries_api', __name__, url_prefix='/api/salaries')
+salaries_api = Blueprint('salaries_api', __name__, url_prefix='/api/salaries')
 api = Api(salaries_api)
 
 class Predict(Resource):
@@ -15,20 +15,19 @@ class Predict(Resource):
             salary_data = pd.read_csv("ds_salaries.csv")
             
             # Preprocesssing
-            salary_data['sex'] = salary_data['sex'].apply(lambda x: 1 if x == 'male' else 0)
-            salary_data['alone'] = salary_data['alone'].apply(lambda x: 1 if x else 0)
+            salary_data['job_title'] = salary_data['job_title'].apply(lambda x: 1 if x else 0)
+            salary_data['experience_level'] = salary_data['experience_level'].apply(lambda x: 1 if x else 0)
             enc = OneHotEncoder(handle_unknown='ignore')
-            onehot = enc.transform(salary_data[['embarked']]).toarray()
-            cols = ['embarked_' + val for val in enc.categories_[0]]
+            onehot = enc.transform(salary_data[['salary']]).toarray()
+            cols = ['salary_' + val for val in enc.categories_[0]]
             salary_data[cols] = pd.DataFrame(onehot)
-            salary_data.drop(['embarked'], axis=1, inplace=True)
+            salary_data.drop(['salary'], axis=1, inplace=True)
             
             # Predict the survival probability for the new passenger
             logreg = LogisticRegression()
-            survival_prob = logreg.predict_proba(salary_data)[:, 1]
-            death_prob = 1 - survival_prob
+            salary_prob = logreg.predict_proba(salary_data)[:, 1]
 
-            return {'death_percentage': float(death_prob * 100), 'survivability_percentage': float(survival_prob * 100)}, 200
+            return {'salary': float(salary_prob)}
         except Exception as e:
             return {'error': str(e)}, 400
 
