@@ -5,6 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 from __init__ import db  # Definitions initialization
+from model.titanic_model import predict as predict_model
 
 class Predict(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # Adding primary key column

@@ -14,8 +14,6 @@ api = Api(titanic_api)
 #Checks Titanic model
 model = predict_model
 
-
-
 class Predict(Resource):
     def post(self):
         try:
