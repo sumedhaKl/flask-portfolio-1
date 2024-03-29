@@ -4,7 +4,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
-from model.titanic_model import predict as predict_model
+from model.titanic_model import Predict
 
 app = Flask(__name__)
 titanic_api = Blueprint('titanic_api', __name__, url_prefix='/api/titanic')
@@ -12,7 +12,7 @@ api = Api(titanic_api)
 
 
 #Checks Titanic model
-model = predict_model
+model = Predict
 
 class Predict(Resource):
     def post(self):
