@@ -7,6 +7,9 @@ import numpy as np
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource 
 
+ # a singleton instance of TitanicModel, created to train the model only once, while using it for prediction multiple times
+_instance = None
+
 class TitanicModel:
     def __init__(self):
         # the titanic ML model
@@ -68,27 +71,6 @@ class TitanicModel:
         
         return {'die' : die, 'survive' : survive}
     
-    # One-hot encode 'embarked' column
-    onehot = encoder.fit_transform(titanic_data[['embarked']]).toarray()
-    cols = ['embarked_' + str(val) for val in encoder.categories_[0]]
-    onehot_df = pd.DataFrame(onehot, columns=cols)
-    titanic_data = pd.concat([titanic_data, onehot_df], axis=1)
-    titanic_data.drop(['embarked'], axis=1, inplace=True)
-      
-def initTitanicData():
-      # Load the titanic dataset
-    titanic_data = sns.load_dataset('titanic')
-    
-    # Drop unnecessary columns
-    titanic_data.drop(['alive', 'who', 'adult_male', 'class', 'embark_town', 'deck'], axis=1, inplace=True)
-
-    # Convert boolean columns to integers
-    titanic_data['sex'] = titanic_data['sex'].apply(lambda x: 1 if x == 'male' else 0)
-    titanic_data['alone'] = titanic_data['alone'].apply(lambda x: 1 if x else 0)
-
-    # Drop rows with missing 'embarked' values before one-hot encoding
-    titanic_data.dropna(subset=['embarked'], inplace=True)
-
     def _train(self):
         # split the data into features and target
         X = self.titanic_data[self.features]
@@ -111,32 +93,31 @@ def initTitanicData():
             cls._instance = cls()
         cls._instance._clean()
         cls._instance._train()
-    # return the instance, to be used for prediction
+        # return the instance, to be used for prediction
         return cls._instance
 
 def predict(self, passenger):
+    passenger_df = pd.DataFrame(passenger, index=[0])
+    passenger_df['sex'] = passenger_df['sex'].apply(lambda x: 1 if x == 'male' else 0)
+    passenger_df['alone'] = passenger_df['alone'].apply(lambda x: 1 if x else 0)
+    onehot = self.encoder.transform(passenger_df[['embarked']]).toarray()
+    cols = ['embarked_' + str(val) for val in self.encoder.categories_[0]]
+    onehot_df = pd.DataFrame(onehot, columns=cols)
+    passenger_df = pd.concat([passenger_df, onehot_df], axis=1)
+    passenger_df.drop(['embarked', 'name'], axis=1, inplace=True)
 
-passenger_df = pd.DataFrame(passenger, index=[0])
-passenger_df['sex'] = passenger_df['sex'].apply(lambda x: 1 if x == 'male' else 0)
-passenger_df['alone'] = passenger_df['alone'].apply(lambda x: 1 if x else 0)
-onehot = self.encoder.transform(passenger_df[['embarked']]).toarray()
-cols = ['embarked_' + str(val) for val in self.encoder.categories_[0]]
-onehot_df = pd.DataFrame(onehot, columns=cols)
-passenger_df = pd.concat([passenger_df, onehot_df], axis=1)
-passenger_df.drop(['embarked', 'name'], axis=1, inplace=True)
+    # predict the survival probability and extract the probabilities from
 
-# predict the survival probability and extract the probabilities from numpy array
-die, survive = np.squeeze(self.model.predict_proba(passenger_df))
-# return the survival probabilities as a dictionary
-return {'die': die, 'survive': survive}
+    die, survive = np.squeeze(self.model.predict_proba(passenger_df))
+    # return the survival probabilities as a dictionary
+    return {'die': die, 'survive': survive}
 
 def feature_weights(self):
-    
     # extract the feature importances from the decision tree model
-        importances = self.dt.feature_importances_
-        # return the feature importances as a dictionary, using dictionary comprehension
-        return {feature: importance for feature, importance in zip(self.features, importances)}
-    
+    importances = self.dt.feature_importances_
+    # return the feature importances as a dictionary, using dictionary comprehension
+    return {feature: importance for feature, importance in zip(self.features, importances)}
+
 def initTitanic():
     TitanicModel.get_instance()
     
@@ -147,7 +128,7 @@ def testTitanic():
     """
      
     # setup passenger data for prediction
-    print(" Step 1:  Define theoritical passenger data for prediction: ")
+    print(" Step 1:  Define theoretical passenger data for prediction: ")
     passenger = {
         'name': ['Sumedha Kamaraju'],
         'pclass': [2],
@@ -186,21 +167,20 @@ if __name__ == "__main__":
     titanic_api = Blueprint('titanic_api', __name__,
                    url_prefix='/api/titanic')
 
-api = Api(titanic_api)
-class TitanicAPI:
-    class _Predict(Resource):
-        
-        def post(self):
-            
-            # Get the passenger data from the request
-            passenger = request.get_json()
+    api = Api(titanic_api)
+    
+    class TitanicAPI:
+        class _Predict(Resource):
+            def post(self):
+                # Get the passenger data from the request
+                passenger = request.get_json()
 
-            # Get the singleton instance of the TitanicModel
-            titanicModel = TitanicModel.get_instance()
-            # Predict the survival probability of the passenger
-            response = titanicModel.predict(passenger)
+                # Get the singleton instance of the TitanicModel
+                titanicModel = TitanicModel.get_instance()
+                # Predict the survival probability of the passenger
+                response = titanicModel.predict(passenger)
 
-            # Return the response as JSON
-            return jsonify(response)
+                # Return the response as JSON
+                return jsonify(response)
 
-    api.add_resource(_Predict, '/predict')
+        api.add_resource(_Predict, '/predict')
