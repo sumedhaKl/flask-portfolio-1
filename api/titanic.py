@@ -2,9 +2,7 @@ from flask import Flask
 import pandas as pd
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.linear_model import LogisticRegression
-from model.titanic_model import Predict
+from model.titanic_model import TitanicModel
 
 app = Flask(__name__)
 titanic_api = Blueprint('titanic_api', __name__, url_prefix='/api/titanic')
@@ -26,7 +24,7 @@ class TitanicAPI:
             return jsonify(response)
 
 #Checks Titanic model
-model = Predict
+model = TitanicModel
 
 class Predict(Resource):
     def post(self):
