@@ -176,9 +176,9 @@ if __name__ == "__main__":
                 passenger = request.get_json()
 
                 # Get the singleton instance of the TitanicModel
-                titanicModel = TitanicModel.get_instance()
+                TitanicModel = TitanicModel.get_instance()
                 # Predict the survival probability of the passenger
-                response = titanicModel.predict(passenger)
+                response = TitanicModel.predict(passenger)
 
                 # Return the response as JSON
                 return jsonify(response)
