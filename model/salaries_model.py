@@ -18,25 +18,22 @@ class SalaryModel:
     def _clean(self):
         # Load and preprocess data
         self.salary_data = pd.read_csv("ds_salaries.csv")
-        self.salary_data['job_title'] = self.salary_data['job_title'].apply(lambda x: 1 if x else 0)
-        self.salary_data['experience_level'] = self.salary_data['experience_level'].apply(lambda x: 1 if x else 0)
-        self.encoder.fit(self.salary_data[['job_title', 'experience_level']])
+        self.encoder.fit(self.salary_data[['experience_level', 'employment_type', 'currency', 'employee_residence', 'company_location']])
 
     def _train(self):
         # Train the model
-        X = self.salary_data[['job_title', 'experience_level']]
-        y = self.salary_data['salary']
+        X = self.salary_data[['experience_level', 'employment_type', 'currency', 'employee_residence', 'company_location']]
+        y = self.salary_data['usd_salary']
+        X_encoded = self.encoder.transform(X)
         self.model = LogisticRegression()
-        self.model.fit(X, y)
+        self.model.fit(X_encoded, y)
 
     def predict(self, data):
-        # Predict salary probability
-        job_title = data['job_title']
-        experience_level = data['experience_level']
-        input_data = pd.DataFrame([[job_title, experience_level]], columns=['job_title', 'experience_level'])
-        input_data[['job_title', 'experience_level']] = self.encoder.transform(input_data[['job_title', 'experience_level']])
-        salary_probability = self.model.predict_proba(input_data)[:, 1]
-        return float(salary_probability)
+        # Predict salary
+        input_data = pd.DataFrame([data], columns=['experience_level', 'employment_type', 'currency', 'employee_residence', 'company_location'])
+        input_data_encoded = self.encoder.transform(input_data)
+        salary_prediction = self.model.predict(input_data_encoded)
+        return float(salary_prediction)
 
     @classmethod
     def get_instance(cls):
@@ -51,17 +48,20 @@ class Predict(Resource):
         try:
             # Parse incoming request data
             parser = reqparse.RequestParser()
-            parser.add_argument('job_title', type=int, required=True)
-            parser.add_argument('experience_level', type=int, required=True)
+            parser.add_argument('experience_level', type=str, required=True)
+            parser.add_argument('employment_type', type=str, required=True)
+            parser.add_argument('currency', type=str, required=True)
+            parser.add_argument('employee_residence', type=str, required=True)
+            parser.add_argument('company_location', type=str, required=True)
             args = parser.parse_args()
 
             # Get singleton instance of SalaryModel
             salary_model = SalaryModel.get_instance()
 
             # Predict salary
-            salary_prob = salary_model.predict(args)
+            salary_prediction = salary_model.predict(args)
 
-            return {'salary_probability': salary_prob}
+            return {'predicted_salary': salary_prediction}
         except Exception as e:
             return {'error': str(e)}, 400
 
