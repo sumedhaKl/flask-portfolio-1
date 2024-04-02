@@ -3,6 +3,7 @@ from flask_restful import Api, Resource
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
+import os
 
 app = Flask(__name__)
 salaries_api = Blueprint('salaries_api', __name__, url_prefix='/api/salaries')
@@ -11,8 +12,14 @@ api = Api(salaries_api)
 class SalaryPredictor(Resource):
     def post(self):
         try:
+            # Get the directory of the script
+            script_dir = os.path.dirname(__file__)
+            
+            # Define the path to the CSV file
+            csv_file_path = os.path.join(script_dir, 'ds_salaries.csv')
+            
             # Load salary data
-            salary_data = pd.read_csv("ds_salaries.csv")
+            salary_data = pd.read_csv(csv_file_path)
             
             # Preprocessing
             salary_data['job_title'] = salary_data['job_title'].apply(lambda x: 1 if x else 0)
