@@ -18,8 +18,10 @@ class SalaryModel:
     def _clean(self):
         # Load and preprocess data
         self.salary_data = pd.read_csv("ds_salaries.csv")
-        self.salary_data['job_title'] = self.salary_data['job_title'].apply(lambda x: 1 if x else 0)
+        self.salary_data['work_year'] = self.salary_data['work_year'].apply(lambda x: 1 if x else 0)
         self.salary_data['experience_level'] = self.salary_data['experience_level'].apply(lambda x: 1 if x else 0)
+        self.salary_data['employment_type'] = self.salary_data['employment_type'].apply(lambda x: 1 if x else 0)
+        self.salary_data['job_title'] = self.salary_data['job_title'].apply(lambda x: 1 if x else 0)
         self.encoder.fit(self.salary_data[['job_title', 'experience_level']])
 
     def _train(self):
