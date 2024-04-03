@@ -21,11 +21,13 @@ class SalaryPredictor(Resource):
             salary_data = pd.read_csv(csv_file_path)
             
             # Preprocessing
-            salary_data['experience_level'] = 'entry', 'mid', 'senior', 'expert'
+            salary_data['experience_level'] = salary_data['experience_level'].map({'entry': 'EN', 'mid': 'MI', 'senior': 'SE', 'expert': 'EX'})
             salary_data['employment_type'] = 'ft'  # Assuming 'ft' for full-time as the only option
             salary_data['currency'] = 'USD'  # Assuming USD as the only currency
             salary_data['usd_salary'] = salary_data['salary']  # Assuming 'salary' column is in USD
             salary_data.drop(['salary'], axis=1, inplace=True)
+            
+            salary_data = salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']]
             
             # Train logistic regression model
             X = salary_data.drop('usd_salary', axis=1)
