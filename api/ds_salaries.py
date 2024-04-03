@@ -21,6 +21,7 @@ class SalaryPredictor(Resource):
             salary_data = pd.read_csv(csv_file_path)
             
             # Preprocessing
+            salary_data['experience_level']='str'
             salary_data['employment_type'] = 'ft'  # Assuming 'ft' for full-time as the only option
             salary_data['currency'] = 'USD'  # Assuming USD as the only currency
             salary_data['usd_salary'] = salary_data['salary']  # Assuming 'salary' column is in USD
