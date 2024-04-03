@@ -29,13 +29,13 @@ class SalaryPredictor(Resource):
             salary_data['experience_level'] = salary_data['experience_level'].map({'entry': 'EN', 'mid': 'MI', 'senior': 'SE', 'expert': 'EX'})
             salary_data['employment_type'] = salary_data['employment_type'].map({'ft': 1})  # Assuming 'ft' for full-time as the only option
             salary_data['salary_currency'] = salary_data['salary_currency'].map({'USD': 1})  # Assuming USD as the only currency
-            salary_data['usd_salary'] = salary_data['usd_salary']  # Assuming 'salary' column is in USD
+            salary_data['salary_in_usd'] = salary_data['salary_in_usd']  # Assuming 'salary' column is in USD
             
             salary_data = salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']]
             
             # Train logistic regression model
-            X = salary_data.drop('usd_salary', axis=1)
-            y = salary_data['usd_salary']
+            X = salary_data.drop('salary_in_usd', axis=1)
+            y = salary_data['salary_in_usd']
             logreg = LogisticRegression()
             logreg.fit(X, y)
             
