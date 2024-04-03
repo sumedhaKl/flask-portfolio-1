@@ -73,7 +73,7 @@ class Predict(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument('work_year', type=int, required=True)
             parser.add_argument('experience_level', type=str, required=True)
-            parser.add_argument('employment_type', type=str, required=True)               
+            parser.add_argument('employment_type', type=float, required=True)               
             parser.add_argument('job_title', type=str, required=True)
             parser.add_argument('currency', type=str, required=True)
             parser.add_argument('usd_salary', type=float, required=True)
