@@ -37,8 +37,8 @@ class SalaryModel:
         # Map experience level to numerical values recognized by the model
         if experience_level == 'entry':
             experience_level_num = 'EN'  # Map 'Entry Level' to 'EN'
-        elif experience_level == 'mid':
-            experience_level_num = 'MI'  # Map 'Mid Level' to 'MI'
+        elif experience_level == 'MI':
+            experience_level_num = 'mid'  # Map 'Mid Level' to 'MI'
         elif experience_level == 'senior':
             experience_level_num = 1
         elif experience_level == 'expert':
