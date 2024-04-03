@@ -31,7 +31,7 @@ class SalaryPredictor(Resource):
             salary_data['salary_currency'] = salary_data['salary_currency'].map({'USD': 1})  # Assuming USD as the only currency
             salary_data['usd_salary'] = salary_data['usd_salary']  # Assuming 'salary' column is in USD
             
-            salary_data = salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']]
+            salary_data = salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']]
             
             # Train logistic regression model
             X = salary_data.drop('usd_salary', axis=1)

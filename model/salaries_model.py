@@ -22,17 +22,17 @@ class SalaryModel:
         self.salary_data['experience_level'] = self.salary_data['experience_level'].apply(lambda x: 1 if x else 0)
         self.salary_data['employment_type'] = self.salary_data['employment_type'].apply(lambda x: 1 if x else 0)
         self.salary_data['job_title'] = self.salary_data['job_title'].apply(lambda x: 1 if x else 0)
-        self.salary_data['currency'] = self.salary_data['currency'].apply(lambda x: 1 if x else 0)
-        self.salary_data['usd_salary'] = self.salary_data['usd_salary'].apply(lambda x: 1 if x else 0)
+        self.salary_data['salary_currency'] = self.salary_data['salary_currency'].apply(lambda x: 1 if x else 0)
+        self.salary_data['salary_in_usd'] = self.salary_data['salary_in_usd'].apply(lambda x: 1 if x else 0)
         self.salary_data['employee_residence'] = self.salary_data['employee_residence'].apply(lambda x: 1 if x else 0)
         self.salary_data['remote_ratio'] = self.salary_data['remote_ratio'].apply(lambda x: 1 if x else 0)
         self.salary_data['company_location'] = self.salary_data['company_location'].apply(lambda x: 1 if x else 0)
         self.salary_data['company_size'] = self.salary_data['company_size'].apply(lambda x: 1 if x else 0)
-        self.encoder.fit(self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
+        self.encoder.fit(self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
 
     def _train(self):
         # Train the model
-        X = self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']]
+        X = self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']]
         y = self.salary_data['salary']
         self.model = LogisticRegression()
         self.model.fit(X, y)
@@ -43,8 +43,8 @@ class SalaryModel:
         experience_level = data['experience_level']
         employment_type = data['employment_type']
         job_title = data['job_title']
-        currency = data['currency']
-        usd_salary = data['usd_salary']
+        salary_currency = data['salary_currency']
+        salary_in_usd = data['salary_in_usd']
         employee_residence = data['employee_residence']
         remote_ratio = data['remote_ratio']
         company_location = data['company_location']
@@ -61,8 +61,8 @@ class SalaryModel:
         else:
             raise ValueError("Invalid experience level")
         
-        input_data = pd.DataFrame([[work_year, experience_level_num, employment_type, job_title, currency, usd_salary, employee_residence, remote_ratio, company_location, company_size]], columns=['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size'])
-        input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']] = self.encoder.transform(input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
+        input_data = pd.DataFrame([[work_year, experience_level_num, employment_type, job_title, salary_currency, salary_in_usd, employee_residence, remote_ratio, company_location, company_size]], columns=['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size'])
+        input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']] = self.encoder.transform(input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
         salary_probability = self.model.predict_proba(input_data)[:, 1]
         return float(salary_probability)
 
@@ -83,8 +83,8 @@ class Predict(Resource):
             parser.add_argument('experience_level', type=str, required=True)
             parser.add_argument('employment_type', type=float, required=True)               
             parser.add_argument('job_title', type=str, required=True)
-            parser.add_argument('currency', type=str, required=True)
-            parser.add_argument('usd_salary', type=float, required=True)
+            parser.add_argument('salary_currency', type=str, required=True)
+            parser.add_argument('salary_in_usd', type=float, required=True)
             parser.add_argument('employee_residence', type=str, required=True)
             parser.add_argument('remote_ratio', type=float, required=True)
             parser.add_argument('company_location', type=str, required=True)
