@@ -1,9 +1,8 @@
-from flask import Flask
-from flask import Blueprint
+from flask import Flask, Blueprint
 from flask_restful import Api, Resource, reqparse
+import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
-import pandas as pd
 
 app = Flask(__name__)
 salaries_api = Blueprint('salaries_api', __name__, url_prefix='/api/salaries')
@@ -32,8 +31,16 @@ class SalaryModel:
 
     def predict(self, data):
         # Predict salary probability
-        job_title = data['job_title']
+        work_year = data['work_year']
         experience_level = data['experience_level']
+        employment_type = data['employment_type']
+        job_title = data['job_title']
+        currency = data['currency']
+        usd_salary = data['usd_salary']
+        employee_residence = data['employee_residence']
+        remote_ratio = data['remote_ratio']
+        company_location = data['company_location']
+        company_size = data['company_size']
         # Map experience level to numerical values recognized by the model
         if experience_level == 'entry':
             experience_level_num = 'EN'  # Map 'Entry Level' to 'EN'
@@ -46,8 +53,8 @@ class SalaryModel:
         else:
             raise ValueError("Invalid experience level")
         
-        input_data = pd.DataFrame([[job_title, experience_level_num]], columns=['job_title', 'experience_level'])
-        input_data[['job_title', 'experience_level']] = self.encoder.transform(input_data[['job_title', 'experience_level']])
+        input_data = pd.DataFrame([[work_year, experience_level_num, employment_type, job_title, currency, usd_salary, employee_residence, remote_ratio, company_location, company_size]], columns=['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size'])
+        input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']] = self.encoder.transform(input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
         salary_probability = self.model.predict_proba(input_data)[:, 1]
         return float(salary_probability)
 
@@ -64,8 +71,16 @@ class Predict(Resource):
         try:
             # Parse incoming request data
             parser = reqparse.RequestParser()
-            parser.add_argument('job_title', type=int, required=True)
+            parser.add_argument('work_year', type=int, required=True)
             parser.add_argument('experience_level', type=str, required=True)
+            parser.add_argument('employment_type', type=str, required=True)               
+            parser.add_argument('job_title', type=str, required=True)
+            parser.add_argument('currency', type=str, required=True)
+            parser.add_argument('usd_salary', type=float, required=True)
+            parser.add_argument('employee_residence', type=str, required=True)
+            parser.add_argument('remote_ratio', type=float, required=True)
+            parser.add_argument('company_location', type=str, required=True)
+            parser.add_argument('company_size', type=int, required=True)
             args = parser.parse_args()
 
             # Get singleton instance of SalaryModel
