@@ -22,11 +22,17 @@ class SalaryModel:
         self.salary_data['experience_level'] = self.salary_data['experience_level'].apply(lambda x: 1 if x else 0)
         self.salary_data['employment_type'] = self.salary_data['employment_type'].apply(lambda x: 1 if x else 0)
         self.salary_data['job_title'] = self.salary_data['job_title'].apply(lambda x: 1 if x else 0)
-        self.encoder.fit(self.salary_data[['job_title', 'experience_level']])
+        self.salary_data['currency'] = self.salary_data['currency'].apply(lambda x: 1 if x else 0)
+        self.salary_data['usd_salary'] = self.salary_data['usd_salary'].apply(lambda x: 1 if x else 0)
+        self.salary_data['employee_residence'] = self.salary_data['employee_residence'].apply(lambda x: 1 if x else 0)
+        self.salary_data['remote_ratio'] = self.salary_data['remote_ratio'].apply(lambda x: 1 if x else 0)
+        self.salary_data['company_location'] = self.salary_data['company_location'].apply(lambda x: 1 if x else 0)
+        self.salary_data['company_size'] = self.salary_data['company_size'].apply(lambda x: 1 if x else 0)
+        self.encoder.fit(self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
 
     def _train(self):
         # Train the model
-        X = self.salary_data[['job_title', 'experience_level']]
+        X = self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']]
         y = self.salary_data['salary']
         self.model = LogisticRegression()
         self.model.fit(X, y)
