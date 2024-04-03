@@ -35,14 +35,14 @@ class SalaryModel:
         job_title = data['job_title']
         experience_level = data['experience_level']
         # Map experience level to numerical values recognized by the model
-        if experience_level == 'EN':
-            experience_level_num = 'entry'  # Map 'Entry Level' to 'EN'
-        elif experience_level == 'MI':
-            experience_level_num = 'mid'  # Map 'Mid Level' to 'MI'
-        elif experience_level == 'SE':
-            experience_level_num = 'senior'
-        elif experience_level == 'EX':
-            experience_level_num = 'expert'  # Map 'Expert Level' to 'EX'
+        if experience_level == 'entry':
+            experience_level_num = 0  # Map 'Entry Level' to 'EN'
+        elif experience_level == 'mid':
+            experience_level_num = 1  # Map 'Mid Level' to 'MI'
+        elif experience_level == 'senior':
+            experience_level_num = 2
+        elif experience_level == 'expert':
+            experience_level_num = 3  # Map 'Expert Level' to 'EX'
         else:
             raise ValueError("Invalid experience level")
         
