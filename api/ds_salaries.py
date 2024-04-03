@@ -22,7 +22,7 @@ class SalaryPredictor(Resource):
             salary_data = pd.read_csv(csv_file_path)
             
             encoder = OneHotEncoder(handle_unknown='ignore')
-            encoder.fit(salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
+            encoder.fit(salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
            
             # Preprocessing
             encoder=OneHotEncoder(handle_unknown='ignore')
