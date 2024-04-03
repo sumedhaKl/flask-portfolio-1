@@ -2,6 +2,7 @@ from flask import Flask, Blueprint
 from flask_restful import Api, Resource
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import OneHotEncoder
 import os
 
 app = Flask(__name__)
@@ -20,12 +21,15 @@ class SalaryPredictor(Resource):
             # Load salary data
             salary_data = pd.read_csv(csv_file_path)
             
+            encoder = OneHotEncoder(handle_unknown='ignore')
+            encoder.fit(salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
+           
             # Preprocessing
+            encoder=OneHotEncoder(handle_unknown='ignore')
             salary_data['experience_level'] = salary_data['experience_level'].map({'entry': 'EN', 'mid': 'MI', 'senior': 'SE', 'expert': 'EX'})
-            salary_data['employment_type'] = 'ft'  # Assuming 'ft' for full-time as the only option
-            salary_data['currency'] = 'USD'  # Assuming USD as the only currency
-            salary_data['usd_salary'] = salary_data['salary']  # Assuming 'salary' column is in USD
-            salary_data.drop(['salary'], axis=1, inplace=True)
+            salary_data['employment_type'] = salary_data['employment_type'].map({'ft': 1})  # Assuming 'ft' for full-time as the only option
+            salary_data['currency'] = salary_data['currency'].map({'USD': 1})  # Assuming USD as the only currency
+            salary_data['usd_salary'] = salary_data['usd_salary']  # Assuming 'salary' column is in USD
             
             salary_data = salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']]
             
