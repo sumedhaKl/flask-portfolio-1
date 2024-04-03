@@ -65,7 +65,7 @@ class Predict(Resource):
             # Parse incoming request data
             parser = reqparse.RequestParser()
             parser.add_argument('job_title', type=int, required=True)
-            parser.add_argument('experience_level', type=str, required=True)
+            parser.add_argument('experience_level', type=float, required=True)
             args = parser.parse_args()
 
             # Get singleton instance of SalaryModel
