@@ -62,97 +62,97 @@ class SalaryModel:
             raise ValueError("Invalid experience level")
         
         if job_title == 'Data Scientist':
-            job_title_num = 1  
+            job_title = 1  
         elif job_title == 'Data Analyst':
-            job_title_num = 2
+            job_title = 2
         elif job_title == 'Data Engineer':
-            job_title_num = 3
+            job_title = 3
         elif job_title == 'Machine Learning Scientist':
-            job_title_num = 4
+            job_title = 4
         elif job_title == 'Big Data Engineer':
-            job_title_num = 5
+            job_title = 5
         elif job_title == 'Product Data Analyst':
-            job_title_num = 6
+            job_title = 6
         elif job_title == 'Machine Learning Engineer':
-            job_title_num = 7
+            job_title = 7
         elif job_title == 'Lead Data Scientist':
-            job_title_num = 8
+            job_title = 8
         elif job_title == 'Business Data Analyst':
-            job_title_num = 9
+            job_title = 9
         elif job_title == 'Lead Data Engineer':
-            job_title_num = 10
+            job_title = 10
         elif job_title == 'Lead Data Analyst':
-            job_title_num = 11
+            job_title = 11
         elif job_title == 'Data Scientist Consultant':
-            job_title_num = 12
+            job_title = 12
         elif job_title == 'BI Data Analyst':
-            job_title_num = 13
+            job_title = 13
         elif job_title == 'Director of Data Science':
-            job_title_num = 14
+            job_title = 14
         elif job_title == 'Research Scientist':
-            job_title_num = 15
+            job_title = 15
         elif job_title == 'Machine Learning Manager':
-            job_title_num = 16
+            job_title = 16
         elif job_title == 'Data Engineering Manager':
-            job_title_num = 17
+            job_title = 17
         elif job_title == 'Machine Learning Infrastructure Engineer':
-            job_title_num = 18
+            job_title = 18
         elif job_title == 'ML Engineer':
-            job_title_num = 19
+            job_title = 19
         elif job_title == 'AI Scientist':
-            job_title_num = 20
+            job_title = 20
         elif job_title == 'Computer Vision Engineer':
-            job_title_num = 21
+            job_title = 21
         elif job_title == 'Principal Data Scientist':
-            job_title_num = 22
+            job_title = 22
         elif job_title == 'Head of Data':
-            job_title_num = 23
+            job_title = 23
         elif job_title == '3D Computer Vision Researcher':
-            job_title_num = 24
+            job_title = 24
         elif job_title == 'Applied Data Scientist':
-            job_title_num = 25
+            job_title = 25
         elif job_title == 'Marketing Data Analyst':
-            job_title_num = 26
+            job_title = 26
         elif job_title == 'Cloud Data Engineer':
-            job_title_num = 27
+            job_title = 27
         elif job_title == 'Financial Data Analyst':
-            job_title_num = 28
+            job_title = 28
         elif job_title == 'Computer Vision Software Engineer':
-            job_title_num = 29
+            job_title = 29
         elif job_title == 'Data Science Manager':
-            job_title_num = 30
+            job_title = 30
         elif job_title == 'Data Analytics Engineer':
-            job_title_num = 31
+            job_title = 31
         elif job_title == 'Applied Machine Learning Scientist':
-            job_title_num = 32
+            job_title = 32
         elif job_title == 'Data Specialist':
-            job_title_num = 33
+            job_title = 33
         elif job_title == 'Data Science Engineer':
-            job_title_num = 34
+            job_title = 34
         elif job_title == 'Big Data Architect':
-            job_title_num = 35
+            job_title = 35
         elif job_title == 'Head of Data Science':
-            job_title_num = 36
+            job_title = 36
         elif job_title == 'Analytics Engineer':
-            job_title_num = 37
+            job_title = 37
         elif job_title == 'Data Architect':
-            job_title_num = 38
+            job_title = 38
         elif job_title == 'Head of Machine Learning':
-            job_title_num = 39
+            job_title = 39
         elif job_title == 'ETL Developer':
-            job_title_num = 40
+            job_title = 40
         elif job_title == 'Lead Machine Learning Engineer':
-            job_title_num = 41
+            job_title = 41
         elif job_title == 'Machine Learning Developer':
-            job_title_num = 42
+            job_title = 42
         elif job_title == 'Principal Data Analyst':
-            job_title_num = 43
+            job_title = 43
         elif job_title == 'Machine Learning Infrastructure Engineer':
-            job_title_num = 44
+            job_title = 44
         elif job_title == 'NLP Engineer':
-            job_title_num = 45
+            job_title = 45
         elif job_title == 'Data Analytics Lead':
-            job_title_num = 46
+            job_title = 46
         else:
             raise ValueError("Invalid job title")
         
