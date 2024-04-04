@@ -61,6 +61,101 @@ class SalaryModel:
         else:
             raise ValueError("Invalid experience level")
         
+        if job_title == 'Data Scientist':
+            job_title_num = 1  
+        elif job_title == 'Data Analyst':
+            job_title_num = 2
+        elif job_title == 'Data Engineer':
+            job_title_num = 3
+        elif job_title == 'Machine Learning Scientist':
+            job_title_num = 4
+        elif job_title == 'Big Data Engineer':
+            job_title_num = 5
+        elif job_title == 'Product Data Analyst':
+            job_title_num = 6
+        elif job_title == 'Machine Learning Engineer':
+            job_title_num = 7
+        elif job_title == 'Lead Data Scientist':
+            job_title_num = 8
+        elif job_title == 'Business Data Analyst':
+            job_title_num = 9
+        elif job_title == 'Lead Data Engineer':
+            job_title_num = 10
+        elif job_title == 'Lead Data Analyst':
+            job_title_num = 11
+        elif job_title == 'Data Scientist Consultant':
+            job_title_num = 12
+        elif job_title == 'BI Data Analyst':
+            job_title_num = 13
+        elif job_title == 'Director of Data Science':
+            job_title_num = 14
+        elif job_title == 'Research Scientist':
+            job_title_num = 15
+        elif job_title == 'Machine Learning Manager':
+            job_title_num = 16
+        elif job_title == 'Data Engineering Manager':
+            job_title_num = 17
+        elif job_title == 'Machine Learning Infrastructure Engineer':
+            job_title_num = 18
+        elif job_title == 'ML Engineer':
+            job_title_num = 19
+        elif job_title == 'AI Scientist':
+            job_title_num = 20
+        elif job_title == 'Computer Vision Engineer':
+            job_title_num = 21
+        elif job_title == 'Principal Data Scientist':
+            job_title_num = 22
+        elif job_title == 'Head of Data':
+            job_title_num = 23
+        elif job_title == '3D Computer Vision Researcher':
+            job_title_num = 24
+        elif job_title == 'Applied Data Scientist':
+            job_title_num = 25
+        elif job_title == 'Marketing Data Analyst':
+            job_title_num = 26
+        elif job_title == 'Cloud Data Engineer':
+            job_title_num = 27
+        elif job_title == 'Financial Data Analyst':
+            job_title_num = 28
+        elif job_title == 'Computer Vision Software Engineer':
+            job_title_num = 29
+        elif job_title == 'Data Science Manager':
+            job_title_num = 30
+        elif job_title == 'Data Analytics Engineer':
+            job_title_num = 31
+        elif job_title == 'Applied Machine Learning Scientist':
+            job_title_num = 32
+        elif job_title == 'Data Specialist':
+            job_title_num = 33
+        elif job_title == 'Data Science Engineer':
+            job_title_num = 34
+        elif job_title == 'Big Data Architect':
+            job_title_num = 35
+        elif job_title == 'Head of Data Science':
+            job_title_num = 36
+        elif job_title == 'Analytics Engineer':
+            job_title_num = 37
+        elif job_title == 'Data Architect':
+            job_title_num = 38
+        elif job_title == 'Head of Machine Learning':
+            job_title_num = 39
+        elif job_title == 'ETL Developer':
+            job_title_num = 40
+        elif job_title == 'Lead Machine Learning Engineer':
+            job_title_num = 41
+        elif job_title == 'Machine Learning Developer':
+            job_title_num = 42
+        elif job_title == 'Principal Data Analyst':
+            job_title_num = 43
+        elif job_title == 'Machine Learning Infrastructure Engineer':
+            job_title_num = 44
+        elif job_title == 'NLP Engineer':
+            job_title_num = 45
+        elif job_title == 'Data Analytics Lead':
+            job_title_num = 46
+        else:
+            raise ValueError("Invalid job title")
+        
         input_data = pd.DataFrame([[work_year, experience_level_num, employment_type, job_title, salary_currency, salary_in_usd, employee_residence, remote_ratio, company_location, company_size]], columns=['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size'])
         input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']] = self.encoder.transform(input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'currency', 'usd_salary', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
         salary_probability = self.model.predict_proba(input_data)[:, 1]
