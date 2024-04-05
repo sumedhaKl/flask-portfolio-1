@@ -1,5 +1,3 @@
-
-"""
 from flask import Flask, Blueprint
 from flask_restful import Api, Resource, reqparse
 import pandas as pd
@@ -99,4 +97,4 @@ api.add_resource(Predict, '/predict')
 if __name__ == "__main__":
     app.register_blueprint(salaries_api)
     app.run(debug=True)
-    """
+    
