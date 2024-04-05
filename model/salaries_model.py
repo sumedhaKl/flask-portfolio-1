@@ -176,14 +176,14 @@ class Predict(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument('work_year', type=int, required=True)
             parser.add_argument('experience_level', type=str, required=True)
-            parser.add_argument('employment_type', type=float, required=True)               
+            parser.add_argument('employment_type', type=int, required=True)               
             parser.add_argument('job_title', type=str, required=True)
             parser.add_argument('salary_currency', type=str, required=True)
             parser.add_argument('salary_in_usd', type=float, required=True)
             parser.add_argument('employee_residence', type=str, required=True)
             parser.add_argument('remote_ratio', type=float, required=True)
             parser.add_argument('company_location', type=str, required=True)
-            parser.add_argument('company_size', type=int, required=True)
+            parser.add_argument('company_size', type=str, required=True)
             args = parser.parse_args()
 
             # Get singleton instance of SalaryModel
