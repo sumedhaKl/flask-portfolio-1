@@ -23,14 +23,14 @@ class SalaryModel:
         self.salary_data['salary_in_usd'] = pd.to_numeric(self.salary_data['salary_in_usd'])
         self.salary_data['remote_ratio'] = pd.to_numeric(self.salary_data['remote_ratio'])
 
-        # Converting fields to category dtype for efficient memory usage and better performance for certain operations
-        #self.salary_data['experience_level'] = self.salary_data['experience_level'].astype('category')
-        #self.salary_data['employment_type'] = self.salary_data['employment_type'].astype('category')
-        #self.salary_data['job_title'] = self.salary_data['job_title'].astype('category')
-        #self.salary_data['salary_currency'] = self.salary_data['salary_currency'].astype('category')
-        #self.salary_data['employee_residence'] = self.salary_data['employee_residence'].astype('category')
-        #self.salary_data['company_location'] = self.salary_data['company_location'].astype('category')
-        #self.salary_data['company_size'] = self.salary_data['company_size'].astype('category')
+        #Converting fields to category dtype for efficient memory usage and better performance for certain operations
+        self.salary_data['experience_level'] = self.salary_data['experience_level'].astype('category')
+        self.salary_data['employment_type'] = self.salary_data['employment_type'].astype('category')
+        self.salary_data['job_title'] = self.salary_data['job_title'].astype('category')
+        self.salary_data['salary_currency'] = self.salary_data['salary_currency'].astype('category')
+        self.salary_data['employee_residence'] = self.salary_data['employee_residence'].astype('category')
+        self.salary_data['company_location'] = self.salary_data['company_location'].astype('category')
+        self.salary_data['company_size'] = self.salary_data['company_size'].astype('category')
 
         self.encoder.fit(self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
 
@@ -54,16 +54,16 @@ class SalaryModel:
         company_location = data['company_location']
         company_size = data['company_size']
         # Map experience level to numerical values recognized by the model
-        if experience_level == 'entry':
-            experience_level = 'EN'  # Map 'Entry Level' to 'EN'
-        elif experience_level == 'mid':
-            experience_level = 'MI'  # Map 'Mid Level' to 'MI'
-        elif experience_level == 'senior':
-            experience_level = 'SE'
-        elif experience_level == 'expert':
-            experience_level = 'EX'  # Map 'Expert Level' to 'EX'
-        else:
-            raise ValueError("Invalid experience level")
+        #if experience_level == 'entry':
+        #    experience_level = 'EN'  # Map 'Entry Level' to 'EN'
+        #elif experience_level == 'mid':
+        #    experience_level = 'MI'  # Map 'Mid Level' to 'MI'
+        #elif experience_level == 'senior':
+        #    experience_level = 'SE'
+        #elif experience_level == 'expert':
+        #    experience_level = 'EX'  # Map 'Expert Level' to 'EX'
+        #else:
+        #    raise ValueError("Invalid experience level")
         
         if job_title == 'Data Scientist':
             job_title = 1  
