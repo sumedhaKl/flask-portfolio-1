@@ -24,7 +24,7 @@ class SalaryModel:
         self.salary_data['remote_ratio'] = pd.to_numeric(self.salary_data['remote_ratio'])
 
         #Converting fields to category dtype for efficient memory usage and better performance for certain operations
-        #self.salary_data['experience_level'] = self.salary_data['experience_level'].astype('category')
+        self.salary_data['experience_level'] = self.salary_data['experience_level'].astype('float')
         #self.salary_data['employment_type'] = self.salary_data['employment_type'].astype('category')
         #self.salary_data['job_title'] = self.salary_data['job_title'].astype('category')
         #self.salary_data['salary_currency'] = self.salary_data['salary_currency'].astype('category')
