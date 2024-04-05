@@ -36,7 +36,7 @@ class SalaryModel:
             'Big Data Architect': 35, 'Head of Data Science': 36, 'Analytics Engineer': 37,
             'Data Architect': 38, 'Head of Machine Learning': 39, 'ETL Developer': 40,
             'Lead Machine Learning Engineer': 41, 'Machine Learning Developer': 42, 'Principal Data Analyst': 43,
-            'Machine Learning Infrastructure Engineer': 44, 'NLP Engineer': 45, 'Data Analytics Lead': 46
+            'NLP Engineer': 44, 'Data Analytics Lead': 45
         })
         self.salary_data['salary_currency'] = self.salary_data['salary_currency'].map({'USD': 1})  # Assuming USD as the only currency
         self.salary_data['salary_in_usd'] = self.salary_data['salary_in_usd']  # Assuming 'salary' column is in USD
