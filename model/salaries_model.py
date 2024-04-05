@@ -21,7 +21,7 @@ class SalaryModel:
         self.salary_data['work_year'] = self.salary_data['work_year'].apply(lambda x: 1 if x else 0)
         self.salary_data['experience_level'] = self.salary_data['experience_level'].apply(lambda x: 1 if x else 0)
         self.salary_data['employment_type'] = self.salary_data['employment_type'].apply(lambda x: 1 if x else 0)
-        self.salary_data['job_title'] = self.salary_data['job_title'].apply(lambda x: 1 if x else 0)
+        self.salary_data['job_title'] = self.salary_data['job_title'].apply(lambda x: x)
         self.salary_data['salary_currency'] = self.salary_data['salary_currency'].apply(lambda x: 1 if x else 0)
         self.salary_data['salary_in_usd'] = self.salary_data['salary_in_usd'].apply(lambda x: 1 if x else 0)
         self.salary_data['employee_residence'] = self.salary_data['employee_residence'].apply(lambda x: 1 if x else 0)
