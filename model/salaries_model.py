@@ -55,13 +55,13 @@ class SalaryModel:
         company_size = data['company_size']
         # Map experience level to numerical values recognized by the model
         if experience_level == 'entry':
-            experience_level_num = 'EN'  # Map 'Entry Level' to 'EN'
+            experience_level = 'EN'  # Map 'Entry Level' to 'EN'
         elif experience_level == 'mid':
-            experience_level_num = 'MI'  # Map 'Mid Level' to 'MI'
+            experience_level = 'MI'  # Map 'Mid Level' to 'MI'
         elif experience_level == 'senior':
-            experience_level_num = 'SE'
+            experience_level = 'SE'
         elif experience_level == 'expert':
-            experience_level_num = 'EX'  # Map 'Expert Level' to 'EX'
+            experience_level = 'EX'  # Map 'Expert Level' to 'EX'
         else:
             raise ValueError("Invalid experience level")
         
@@ -160,7 +160,7 @@ class SalaryModel:
         else:
             raise ValueError("Invalid job title")
         
-        input_data = pd.DataFrame([[work_year, experience_level_num, employment_type, job_title, salary_currency, salary_in_usd, employee_residence, remote_ratio, company_location, company_size]], columns=['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size'])
+        input_data = pd.DataFrame([[work_year, experience_level, employment_type, job_title, salary_currency, salary_in_usd, employee_residence, remote_ratio, company_location, company_size]], columns=['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size'])
         input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']] = self.encoder.transform(input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
         salary_probability = self.model.predict_proba(input_data)[:, 1]
         return float(salary_probability)
