@@ -24,13 +24,13 @@ class SalaryModel:
         self.salary_data['remote_ratio'] = pd.to_numeric(self.salary_data['remote_ratio'])
 
         # Converting fields to category dtype for efficient memory usage and better performance for certain operations
-        self.salary_data['experience_level'] = self.salary_data['experience_level'].astype('category')
-        self.salary_data['employment_type'] = self.salary_data['employment_type'].astype('category')
-        self.salary_data['job_title'] = self.salary_data['job_title'].astype('category')
-        self.salary_data['salary_currency'] = self.salary_data['salary_currency'].astype('category')
-        self.salary_data['employee_residence'] = self.salary_data['employee_residence'].astype('category')
-        self.salary_data['company_location'] = self.salary_data['company_location'].astype('category')
-        self.salary_data['company_size'] = self.salary_data['company_size'].astype('category')
+        #self.salary_data['experience_level'] = self.salary_data['experience_level'].astype('category')
+        #self.salary_data['employment_type'] = self.salary_data['employment_type'].astype('category')
+        #self.salary_data['job_title'] = self.salary_data['job_title'].astype('category')
+        #self.salary_data['salary_currency'] = self.salary_data['salary_currency'].astype('category')
+        #self.salary_data['employee_residence'] = self.salary_data['employee_residence'].astype('category')
+        #self.salary_data['company_location'] = self.salary_data['company_location'].astype('category')
+        #self.salary_data['company_size'] = self.salary_data['company_size'].astype('category')
 
         self.encoder.fit(self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
 
