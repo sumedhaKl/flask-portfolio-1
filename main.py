@@ -14,7 +14,7 @@ from api.covid import covid_api # Blueprint import api definition
 from api.joke import joke_api # Blueprint import api definition
 from api.user import user_api # Blueprint import api definition
 from api.player import player_api
-from api.ds_salaries import salaries_api
+from model.salaries_model import salaries_api
 from api.titanic import titanic_api
 # database migrations
 from model.users import initUsers
