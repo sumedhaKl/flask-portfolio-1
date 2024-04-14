@@ -160,6 +160,15 @@ class SalaryModel:
         else:
             raise ValueError("Invalid job title")
         
+        if work_year == 2020:
+           work_year = 1 
+        elif work_year == 2021:
+            work_year = 2
+        elif work_year == 2022:
+            work_year = 3
+        else:
+            raise ValueError("Invalid work year")
+        
         input_data = pd.DataFrame([[work_year, experience_level, employment_type, job_title, salary_currency, salary_in_usd, employee_residence, remote_ratio, company_location, company_size]], columns=['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size'])
         input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']] = self.encoder.transform(input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
         salary_probability = self.model.predict_proba(input_data)[:, 1]
@@ -183,9 +192,9 @@ class Predict(Resource):
             parser.add_argument('employment_type', type=int, required=True)               
             parser.add_argument('job_title', type=str, required=True)
             parser.add_argument('salary_currency', type=str, required=True)
-            parser.add_argument('salary_in_usd', type=float, required=True)
+            parser.add_argument('salary_in_usd', type=int, required=True)
             parser.add_argument('employee_residence', type=str, required=True)
-            parser.add_argument('remote_ratio', type=float, required=True)
+            parser.add_argument('remote_ratio', type=int, required=True)
             parser.add_argument('company_location', type=str, required=True)
             parser.add_argument('company_size', type=str, required=True)
             args = parser.parse_args()
