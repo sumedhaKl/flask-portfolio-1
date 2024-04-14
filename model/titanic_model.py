@@ -4,13 +4,12 @@ from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
 import seaborn as sns
 import numpy as np
-from flask import Blueprint, request, jsonify
-from flask_restful import Api, Resource 
-
- # a singleton instance of TitanicModel, created to train the model only once, while using it for prediction multiple times
-_instance = None
 
 class TitanicModel:
+    
+    # a singleton instance of TitanicModel, created to train the model only once, while using it for prediction multiple times
+    _instance = None
+    
     def __init__(self):
         # the titanic ML model
         self.model = None
@@ -46,31 +45,7 @@ class TitanicModel:
         
         # Drop rows with missing values
         self.titanic_data.dropna(inplace=True)
-
-    def predict(self, f_data):
-        # Logistic regression model is used to predict the probability
-        if not isinstance(f_data, pd.DataFrame):
-            return -1
-
-        passenger = f_data.copy()
-
-        # Preprocess the new passenger data
-        passenger['sex'] = passenger['sex'].apply(lambda x: 1 if x == 'male' else 0)
-        passenger['alone'] = passenger['alone'].apply(lambda x: 1 if x else 0)
-
-        # Encode 'embarked' variable
-        enc = OneHotEncoder(handle_unknown='ignore')
-        onehot = enc.transform(passenger[['embarked']]).toarray()
-        cols = ['embarked_' + val for val in enc.categories_[0]]
-        passenger[cols] = pd.DataFrame(onehot, index=passenger.index)
-        passenger.drop(['name'], axis=1, inplace=True)
-        passenger.drop(['embarked'], axis=1, inplace=True)
         
-        #return self.model.predict(passenger)
-        die, survive = np.squeeze(self.model.predict_proba(passenger))
-        
-        return {'die' : die, 'survive' : survive}
-    
     def _train(self):
         # split the data into features and target
         X = self.titanic_data[self.features]
@@ -96,27 +71,26 @@ class TitanicModel:
         # return the instance, to be used for prediction
         return cls._instance
 
-def predict(self, passenger):
-    passenger_df = pd.DataFrame(passenger, index=[0])
-    passenger_df['sex'] = passenger_df['sex'].apply(lambda x: 1 if x == 'male' else 0)
-    passenger_df['alone'] = passenger_df['alone'].apply(lambda x: 1 if x else 0)
-    onehot = self.encoder.transform(passenger_df[['embarked']]).toarray()
-    cols = ['embarked_' + str(val) for val in self.encoder.categories_[0]]
-    onehot_df = pd.DataFrame(onehot, columns=cols)
-    passenger_df = pd.concat([passenger_df, onehot_df], axis=1)
-    passenger_df.drop(['embarked', 'name'], axis=1, inplace=True)
+    def predict(self, passenger):
+        passenger_df = pd.DataFrame(passenger, index=[0])
+        passenger_df['sex'] = passenger_df['sex'].apply(lambda x: 1 if x == 'male' else 0)
+        passenger_df['alone'] = passenger_df['alone'].apply(lambda x: 1 if x else 0)
+        onehot = self.encoder.transform(passenger_df[['embarked']]).toarray()
+        cols = ['embarked_' + str(val) for val in self.encoder.categories_[0]]
+        onehot_df = pd.DataFrame(onehot, columns=cols)
+        passenger_df = pd.concat([passenger_df, onehot_df], axis=1)
+        passenger_df.drop(['embarked', 'name'], axis=1, inplace=True)
 
-    # predict the survival probability and extract the probabilities from
+        # predict the survival probability and extract the probabilities from
 
-    die, survive = np.squeeze(self.model.predict_proba(passenger_df))
-    # return the survival probabilities as a dictionary
-    return {'die': die, 'survive': survive}
-
-def feature_weights(self):
-    # extract the feature importances from the decision tree model
-    importances = self.dt.feature_importances_
-    # return the feature importances as a dictionary, using dictionary comprehension
-    return {feature: importance for feature, importance in zip(self.features, importances)}
+        die, survive = np.squeeze(self.model.predict_proba(passenger_df))
+        # return the survival probabilities as a dictionary
+        return {'die': die, 'survive': survive}
+    
+    def feature_weights(self):
+        importances = self.dt.feature_importances_
+        # return the feature importances as a dictionary, using dictionary comprehension
+        return {feature: importance for feature, importance in zip(self.features, importances)}    
 
 def initTitanic():
     TitanicModel.get_instance()
@@ -163,24 +137,3 @@ def testTitanic():
 if __name__ == "__main__":
     print(" Begin:", testTitanic.__doc__)
     testTitanic()
-    
-    titanic_api = Blueprint('titanic_api', __name__,
-                   url_prefix='/api/titanic')
-
-    api = Api(titanic_api)
-    
-    class TitanicAPI:
-        class _Predict(Resource):
-            def post(self):
-                # Get the passenger data from the request
-                passenger = request.get_json()
-
-                # Get the singleton instance of the TitanicModel
-                TitanicModel = TitanicModel.get_instance()
-                # Predict the survival probability of the passenger
-                response = TitanicModel.predict(passenger)
-
-                # Return the response as JSON
-                return jsonify(response)
-
-        api.add_resource(_Predict, '/predict')

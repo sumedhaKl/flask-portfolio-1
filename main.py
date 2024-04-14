@@ -19,7 +19,7 @@ from api.titanic import titanic_api
 # database migrations
 from model.users import initUsers
 from model.players import initPlayers
-from model.salaries_model import initSalary
+from model.salaries_model import SalaryModel
 
 # setup App pages
 from projects.projects import app_projects # Blueprint directory import projects definition
@@ -60,7 +60,7 @@ def before_request():
 # Create an AppGroup for custom commands
 custom_cli = AppGroup('custom', help='Custom commands')
 
-initSalary()
+SalaryModel()
 
 # Define a command to generate data
 @custom_cli.command('generate_data')
