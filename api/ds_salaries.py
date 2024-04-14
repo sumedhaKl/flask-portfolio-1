@@ -18,7 +18,7 @@ class SalaryModel:
     def _clean(self):
         # Load and preprocess data
         self.salary_data = pd.read_csv("ds_salaries.csv")
-        self.salary_data['work_year'] = pd.to_numeric(self.salary_data['work_year'])
+        self.salary_data['work_year'] = pd.to_numeric(self.salary_data['work_year'], errors='coerce')
         self.salary_data['salary'] = pd.to_numeric(self.salary_data['salary'])
         self.salary_data['salary_in_usd'] = pd.to_numeric(self.salary_data['salary_in_usd'])
         self.salary_data['remote_ratio'] = pd.to_numeric(self.salary_data['remote_ratio'])
@@ -32,7 +32,11 @@ class SalaryModel:
         #self.salary_data['company_location'] = self.salary_data['company_location'].astype('category')
         #self.salary_data['company_size'] = self.salary_data['company_size'].astype('category')
 
-        self.encoder.fit(self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
+        self.salary_data.dropna(inplace=True)
+        
+        self.features = ['experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']
+        
+        self.encoder.fit(self.salary_data[['experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
 
     def _train(self):
         # Train the model
