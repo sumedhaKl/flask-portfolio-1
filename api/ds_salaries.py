@@ -23,160 +23,99 @@ class SalaryModel:
         self.salary_data['salary_in_usd'] = pd.to_numeric(self.salary_data['salary_in_usd'])
         self.salary_data['remote_ratio'] = pd.to_numeric(self.salary_data['remote_ratio'])
 
-        #Converting fields to category dtype for efficient memory usage and better performance for certain operations
-        #self.salary_data['experience_level'] = self.salary_data['experience_level'].astype('category')
-        #self.salary_data['employment_type'] = self.salary_data['employment_type'].astype('category')
-        #self.salary_data['job_title'] = self.salary_data['job_title'].astype('category')
-        #self.salary_data['salary_currency'] = self.salary_data['salary_currency'].astype('category')
-        #self.salary_data['employee_residence'] = self.salary_data['employee_residence'].astype('category')
-        #self.salary_data['company_location'] = self.salary_data['company_location'].astype('category')
-        #self.salary_data['company_size'] = self.salary_data['company_size'].astype('category')
-
+        # Drop NaN values
         self.salary_data.dropna(inplace=True)
-        
+
+        # Define features for encoding
         self.features = ['experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']
         
-        self.encoder.fit(self.salary_data[['experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
+        # Fit OneHotEncoder
+        self.encoder.fit(self.salary_data[self.features])
 
     def _train(self):
         # Train the model
-        X = self.salary_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']]
+        X = self.salary_data[['work_year'] + self.features[1:]]
         y = self.salary_data['salary']
         self.model = LogisticRegression()
         self.model.fit(X, y)
 
     def predict(self, data):
-        # Predict salary probability
-        work_year = data['work_year']
-        experience_level = data['experience_level']
-        employment_type = data['employment_type']
-        job_title = data['job_title']
-        salary_currency = data['salary_currency']
-        salary_in_usd = data['salary_in_usd']
-        employee_residence = data['employee_residence']
-        remote_ratio = data['remote_ratio']
-        company_location = data['company_location']
-        company_size = data['company_size']
-        # Map experience level to numerical values recognized by the model
-        #if experience_level == 'entry':
-        #    experience_level = 'EN'  # Map 'Entry Level' to 'EN'
-        #elif experience_level == 'mid':
-        #    experience_level = 'MI'  # Map 'Mid Level' to 'MI'
-        #elif experience_level == 'senior':
-        #    experience_level = 'SE'
-        #elif experience_level == 'expert':
-        #    experience_level = 'EX'  # Map 'Expert Level' to 'EX'
-        #else:
-        #    raise ValueError("Invalid experience level")
-        
-        if job_title == 'Data Scientist':
-            job_title = 1  
-        elif job_title == 'Data Analyst':
-            job_title = 2
-        elif job_title == 'Data Engineer':
-            job_title = 3
-        elif job_title == 'Machine Learning Scientist':
-            job_title = 4
-        elif job_title == 'Big Data Engineer':
-            job_title = 5
-        elif job_title == 'Product Data Analyst':
-            job_title = 6
-        elif job_title == 'Machine Learning Engineer':
-            job_title = 7
-        elif job_title == 'Lead Data Scientist':
-            job_title = 8
-        elif job_title == 'Business Data Analyst':
-            job_title = 9
-        elif job_title == 'Lead Data Engineer':
-            job_title = 10
-        elif job_title == 'Lead Data Analyst':
-            job_title = 11
-        elif job_title == 'Data Scientist Consultant':
-            job_title = 12
-        elif job_title == 'BI Data Analyst':
-            job_title = 13
-        elif job_title == 'Director of Data Science':
-            job_title = 14
-        elif job_title == 'Research Scientist':
-            job_title = 15
-        elif job_title == 'Machine Learning Manager':
-            job_title = 16
-        elif job_title == 'Data Engineering Manager':
-            job_title = 17
-        elif job_title == 'Machine Learning Infrastructure Engineer':
-            job_title = 18
-        elif job_title == 'ML Engineer':
-            job_title = 19
-        elif job_title == 'AI Scientist':
-            job_title = 20
-        elif job_title == 'Computer Vision Engineer':
-            job_title = 21
-        elif job_title == 'Principal Data Scientist':
-            job_title = 22
-        elif job_title == 'Head of Data':
-            job_title = 23
-        elif job_title == '3D Computer Vision Researcher':
-            job_title = 24
-        elif job_title == 'Applied Data Scientist':
-            job_title = 25
-        elif job_title == 'Marketing Data Analyst':
-            job_title = 26
-        elif job_title == 'Cloud Data Engineer':
-            job_title = 27
-        elif job_title == 'Financial Data Analyst':
-            job_title = 28
-        elif job_title == 'Computer Vision Software Engineer':
-            job_title = 29
-        elif job_title == 'Data Science Manager':
-            job_title = 30
-        elif job_title == 'Data Analytics Engineer':
-            job_title = 31
-        elif job_title == 'Applied Machine Learning Scientist':
-            job_title = 32
-        elif job_title == 'Data Specialist':
-            job_title = 33
-        elif job_title == 'Data Science Engineer':
-            job_title = 34
-        elif job_title == 'Big Data Architect':
-            job_title = 35
-        elif job_title == 'Head of Data Science':
-            job_title = 36
-        elif job_title == 'Analytics Engineer':
-            job_title = 37
-        elif job_title == 'Data Architect':
-            job_title = 38
-        elif job_title == 'Head of Machine Learning':
-            job_title = 39
-        elif job_title == 'ETL Developer':
-            job_title = 40
-        elif job_title == 'Lead Machine Learning Engineer':
-            job_title = 41
-        elif job_title == 'Machine Learning Developer':
-            job_title = 42
-        elif job_title == 'Principal Data Analyst':
-            job_title = 43
-        elif job_title == 'Machine Learning Infrastructure Engineer':
-            job_title = 44
-        elif job_title == 'NLP Engineer':
-            job_title = 45
-        elif job_title == 'Data Analytics Lead':
-            job_title = 46
-        else:
-            raise ValueError("Invalid job title")
-        
-        if work_year == 2020:
-           work_year = 1 
-        elif work_year == 2021:
-            work_year = 2
-        elif work_year == 2022:
-            work_year = 3
-        else:
-            raise ValueError("Invalid work year")
-        
-        input_data = pd.DataFrame([[work_year, experience_level, employment_type, job_title, salary_currency, salary_in_usd, employee_residence, remote_ratio, company_location, company_size]], columns=['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size'])
-        input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']] = self.encoder.transform(input_data[['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']])
-        salary_probability = self.model.predict_proba(input_data)[:, 1]
-        return float(salary_probability)
+        try:
+            # Convert relevant fields to numeric
+            work_year = pd.to_numeric(data['work_year'])
+            salary_in_usd = pd.to_numeric(data['salary_in_usd'])
+            remote_ratio = pd.to_numeric(data['remote_ratio'])
+
+            # Map experience level
+            experience_level_mapping = {
+                'entry': 'EN',
+                'mid': 'MI',
+                'senior': 'SE',
+                'expert': 'EX'
+            }
+            experience_level = experience_level_mapping[data['experience_level'].lower()]
+
+            # Map job title
+            job_title_mapping = {
+                'data scientist': 1,
+                'data analyst': 2,
+                'data engineer': 3,
+                'machine learning scientist': 4,
+                'big data engineer': 5,
+                'product data analyst': 6,
+                'machine learning engineer': 7,
+                'lead data scientist': 8,
+                'business data analyst': 9,
+                'lead data engineer': 10,
+                'lead data analyst': 11,
+                'data scientist consultant': 12,
+                'bi data analyst': 13,
+                'director of data science': 14,
+                'research scientist': 15,
+                'machine learning manager': 16,
+                'data engineering manager': 17,
+                'machine learning infrastructure engineer': 18,
+                'ml engineer': 19,
+                'ai scientist': 20,
+                'computer vision engineer': 21,
+                'principal data scientist': 22,
+                'head of data': 23,
+                '3d computer vision researcher': 24,
+                'applied data scientist': 25,
+                'marketing data analyst': 26,
+                'cloud data engineer': 27,
+                'financial data analyst': 28,
+                'computer vision software engineer': 29,
+                'data science manager': 30,
+                'data analytics engineer': 31,
+                'applied machine learning scientist': 32,
+                'data specialist': 33,
+                'data science engineer': 34,
+                'big data architect': 35,
+                'head of data science': 36,
+                'analytics engineer': 37,
+                'data architect': 38,
+                'head of machine learning': 39,
+                'etl developer': 40,
+                'lead machine learning engineer': 41,
+                'machine learning developer': 42,
+                'principal data analyst': 43,
+                'nlp engineer': 44,
+                'data analytics lead': 45
+            }
+            job_title = job_title_mapping[data['job_title'].lower()]
+
+
+            input_data = pd.DataFrame([[work_year, experience_level, job_title, salary_in_usd, remote_ratio]], columns=['work_year'] + self.features[1:])
+            
+            # Transform categorical features
+            input_data[self.features] = self.encoder.transform(input_data[self.features])
+
+            # Predict probability
+            salary_probability = self.model.predict_proba(input_data)[:, 1]
+            return float(salary_probability)
+        except ValueError as e:
+            return {'error': str(e)}, 400
 
     @classmethod
     def get_instance(cls):
