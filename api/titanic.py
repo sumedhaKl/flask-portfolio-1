@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
+from model.titanic_model import TitanicModel
 
 titanic_api = Blueprint('titanic_api', __name__, url_prefix='/api/titanic')
 api = Api(titanic_api)
@@ -12,7 +13,7 @@ class TitanicAPI:
             passenger = request.get_json()
 
             # Get the singleton instance of the TitanicModel
-            titanicModel = TitanicAPI.get_instance()
+            titanicModel = TitanicModel.get_instance()
             # Predict the survival probability of the passenger
             response = titanicModel.predict(passenger)
 
