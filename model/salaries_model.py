@@ -50,7 +50,7 @@ class SalaryModel(Resource):
             
             input_features = pd.DataFrame([args], columns=self.features)
             
-            probability = self.model.predict_proba(input_features)[0, 1]  # Get the probability for class 1
+            probability = self.model.predict_proba(input_features)[0, 1] 
             return {'probability': probability}, 200
         except Exception as e:
             return {'error': str(e)}, 400
