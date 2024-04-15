@@ -1,4 +1,4 @@
-from flask import Blueprint, app
+from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource, reqparse
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
@@ -48,17 +48,19 @@ class SalaryModel:
     def predict(self, data):
         try:
         # Predict salary probability
-            work_year = pd.to_numeric(data['work_year'])
-            salary_in_usd = pd.to_numeric(data['salary_in_usd'])
-            remote_ratio = pd.to_numeric(data['remote_ratio'])
+            work_year = float(data['work_year'])
+            salary_in_usd = float(data['salary_in_usd'])
+            remote_ratio = float(data['remote_ratio'])
         
             experience_level_mapping = {
-             'entry': 'EN',
-             'mid': 'MI',
-            'senior': 'SE',
-            'expert': 'EX'     
+                'entry': 'EN',
+                'mid': 'MI',
+                'senior': 'SE',
+                'expert': 'EX'     
             }
             experience_level = experience_level_mapping.get[data['experience_level'].lower()]
+            if experience_level is None:
+                raise ValueError("Invalid experience level")
         
         # Map experience level to numerical values recognized by the model
         #if experience_level == 'entry':
@@ -71,38 +73,35 @@ class SalaryModel:
         #    experience_level = 'EX'  # Map 'Expert Level' to 'EX'
         #else:
         #    raise ValueError("Invalid experience level")
-        
-            if experience_level is None:
-                raise ValueError("Invalid experience level")
             
             job_title_mapping = {
-                'Data Scientist': '1',
-                'Data Analyst': 2,
-                'Data Engineer': 3,
-                'Machine Learning Scientist': 4,
-                'Big Data Engineer': 5,
-                'Product Data Analyst': 6,
-                'Machine Learning Engineer': 7,
-                'Lead Data Scientist': 8,
-                'Business Data Analyst': 9,
-                'Lead Data Engineer': 10,
-                'Lead Data Analyst': 11,
-                'Data Scientist Consultant': 12,
-                'BI Data Analyst': 13,
-                'Director of Data Science': 14,
-                'Research Scientist': 15,
-                'Machine Learning Manager': 16,
-                'Data Engineering Manager': 17,
-                'Machine Learning Infrastructure Engineer': 18,
-                'ML Engineer': 19,
-                'AI Scientist': 20,
-                'Computer Vision Engineer': 21,
-                'Principal Data Scientist': 22,
-                'Head of Data': 23,
-                '3D Computer Vision Researcher': 24,
-                'Applied Data Scientist': 25,
-                'Marketing Data Analyst': 26,
-        'cloud data engineer': 27,
+            'Data Scientist': 1,
+            'Data Analyst': 2,
+            'Data Engineer': 3,
+            'Machine Learning Scientist': 4,
+            'Big Data Engineer': 5,
+            'Product Data Analyst': 6,
+            'Machine Learning Engineer': 7,
+            'Lead Data Scientist': 8,
+            'Business Data Analyst': 9,
+            'Lead Data Engineer': 10,
+            'Lead Data Analyst': 11,
+            'Data Scientist Consultant': 12,
+            'BI Data Analyst': 13,
+            'Director of Data Science': 14,
+            'Research Scientist': 15,
+            'Machine Learning Manager': 16,
+            'Data Engineering Manager': 17,
+            'Machine Learning Infrastructure Engineer': 18,
+            'ML Engineer': 19,
+            'AI Scientist': 20,
+            'Computer Vision Engineer': 21,
+            'Principal Data Scientist': 22,
+            'Head of Data': 23,
+            '3D Computer Vision Researcher': 24,
+            'Applied Data Scientist': 25,
+            'Marketing Data Analyst': 26,
+            'cloud data engineer': 27,
             'financial data analyst': 28,
             'computer vision software engineer': 29,
             'data science manager': 30,
@@ -123,7 +122,6 @@ class SalaryModel:
             'data analytics lead': 45
         }
             job_title = job_title_mapping.get[data['job_title'].lower()]
-        
             if job_title is None:
                 raise ValueError("Invalid job title")
         
@@ -133,7 +131,7 @@ class SalaryModel:
         
             salary_probability = self.model.predict_proba(input_data)[:, 1]
             return float(salary_probability)
-        except ValueError as e:
+        except (ValueError, KeyError) as e:
             return {'error': str(e)}, 400
     
     @classmethod
@@ -149,14 +147,14 @@ class Predict(Resource):
         try:
             # Parse incoming request data
             parser = reqparse.RequestParser()
-            parser.add_argument('work_year', type=int, required=True)
+            parser.add_argument('work_year', type=str, required=True)
             parser.add_argument('experience_level', type=str, required=True)
-            parser.add_argument('employment_type', type=int, required=True)               
+            parser.add_argument('employment_type', type=str, required=True)               
             parser.add_argument('job_title', type=str, required=True)
             parser.add_argument('salary_currency', type=str, required=True)
-            parser.add_argument('salary_in_usd', type=int, required=True)
+            parser.add_argument('salary_in_usd', type=str, required=True)
             parser.add_argument('employee_residence', type=str, required=True)
-            parser.add_argument('remote_ratio', type=int, required=True)
+            parser.add_argument('remote_ratio', type=str, required=True)
             parser.add_argument('company_location', type=str, required=True)
             parser.add_argument('company_size', type=str, required=True)
             args = parser.parse_args()
@@ -172,7 +170,3 @@ class Predict(Resource):
             return {'error': str(e)}, 400
 
 api.add_resource(Predict, '/predict')
-
-if __name__ == "__main__":
-    app.register_blueprint(salaries_api)
-    app.run(debug=True)
