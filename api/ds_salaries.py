@@ -1,10 +1,9 @@
-from flask import Flask, Blueprint
+from flask import Blueprint, app
 from flask_restful import Api, Resource, reqparse
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
 
-app = Flask(__name__)
 salaries_api = Blueprint('salaries_api', __name__, url_prefix='/api/salaries')
 api = Api(salaries_api)
 
@@ -33,7 +32,7 @@ class SalaryModel:
         #self.salary_data['company_location'] = self.salary_data['company_location'].astype('category')
         #self.salary_data['company_size'] = self.salary_data['company_size'].astype('category')
 
-        self.salary_dropna(inplace=True)
+        self.salary_data.dropna(inplace=True)
         
         self.features = ['experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size']
         
@@ -47,18 +46,19 @@ class SalaryModel:
         self.model.fit(X, y)
 
     def predict(self, data):
+        try:
         # Predict salary probability
-        work_year = pd.to_numeric(data['work_year'])
-        salary_in_usd = pd.to_numeric(data['salary_in_usd'])
-        remote_ratio = pd.to_numeric(data['remote_ratio'])
+            work_year = pd.to_numeric(data['work_year'])
+            salary_in_usd = pd.to_numeric(data['salary_in_usd'])
+            remote_ratio = pd.to_numeric(data['remote_ratio'])
         
-        experience_level_mapping = {
-            'entry': 'EN',
-            'mid': 'MI',
+            experience_level_mapping = {
+             'entry': 'EN',
+             'mid': 'MI',
             'senior': 'SE',
             'expert': 'EX'     
-        }
-        experience_level = experience_level_mapping[data['experience_level'].lower()]
+            }
+            experience_level = experience_level_mapping.get[data['experience_level'].lower()]
         
         # Map experience level to numerical values recognized by the model
         #if experience_level == 'entry':
@@ -72,109 +72,69 @@ class SalaryModel:
         #else:
         #    raise ValueError("Invalid experience level")
         
-        if job_title == 'Data Scientist':
-            job_title = 1  
-        elif job_title == 'Data Analyst':
-                job_title = 2
-        elif job_title == 'Data Engineer':
-            job_title = 3
-        elif job_title == 'Machine Learning Scientist':
-            job_title = 4
-        elif job_title == 'Big Data Engineer':
-            job_title = 5
-        elif job_title == 'Product Data Analyst':
-            job_title = 6
-        elif job_title == 'Machine Learning Engineer':
-            job_title = 7
-        elif job_title == 'Lead Data Scientist':
-            job_title = 8
-        elif job_title == 'Business Data Analyst':
-            job_title = 9
-        elif job_title == 'Lead Data Engineer':
-            job_title = 10
-        elif job_title == 'Lead Data Analyst':
-            job_title = 11
-        elif job_title == 'Data Scientist Consultant':
-            job_title = 12
-        elif job_title == 'BI Data Analyst':
-            job_title = 13
-        elif job_title == 'Director of Data Science':
-            job_title = 14
-        elif job_title == 'Research Scientist':
-            job_title = 15
-        elif job_title == 'Machine Learning Manager':
-            job_title = 16
-        elif job_title == 'Data Engineering Manager':
-            job_title = 17
-        elif job_title == 'Machine Learning Infrastructure Engineer':
-            job_title = 18
-        elif job_title == 'ML Engineer':
-            job_title = 19
-        elif job_title == 'AI Scientist':
-            job_title = 20
-        elif job_title == 'Computer Vision Engineer':
-            job_title = 21
-        elif job_title == 'Principal Data Scientist':
-            job_title = 22
-        elif job_title == 'Head of Data':
-            job_title = 23
-        elif job_title == '3D Computer Vision Researcher':
-            job_title = 24
-        elif job_title == 'Applied Data Scientist':
-            job_title = 25
-        elif job_title == 'Marketing Data Analyst':
-            job_title = 26
-        elif job_title == 'Cloud Data Engineer':
-            job_title = 27
-        elif job_title == 'Financial Data Analyst':
-            job_title = 28
-        elif job_title == 'Computer Vision Software Engineer':
-            job_title = 29
-        elif job_title == 'Data Science Manager':
-            job_title = 30
-        elif job_title == 'Data Analytics Engineer':
-            job_title = 31
-        elif job_title == 'Applied Machine Learning Scientist':
-            job_title = 32
-        elif job_title == 'Data Specialist':
-            job_title = 33
-        elif job_title == 'Data Science Engineer':
-            job_title = 34
-        elif job_title == 'Big Data Architect':
-            job_title = 35
-        elif job_title == 'Head of Data Science':
-            job_title = 36
-        elif job_title == 'Analytics Engineer':
-            job_title = 37
-        elif job_title == 'Data Architect':
-            job_title = 38
-        elif job_title == 'Head of Machine Learning':
-            job_title = 39
-        elif job_title == 'ETL Developer':
-            job_title = 40
-        elif job_title == 'Lead Machine Learning Engineer':
-            job_title = 41
-        elif job_title == 'Machine Learning Developer':
-            job_title = 42
-        elif job_title == 'Principal Data Analyst':
-            job_title = 43
-        elif job_title == 'Machine Learning Infrastructure Engineer':
-            job_title = 44
-        elif job_title == 'NLP Engineer':
-            job_title = 45
-        elif job_title == 'Data Analytics Lead':
-            job_title = 46
-        else:
-            raise ValueError("Invalid job title")
+            if experience_level is None:
+                raise ValueError("Invalid experience level")
+            
+            job_title_mapping = {
+                'Data Scientist': '1',
+                'Data Analyst': 2,
+                'Data Engineer': 3,
+                'Machine Learning Scientist': 4,
+                'Big Data Engineer': 5,
+                'Product Data Analyst': 6,
+                'Machine Learning Engineer': 7,
+                'Lead Data Scientist': 8,
+                'Business Data Analyst': 9,
+                'Lead Data Engineer': 10,
+                'Lead Data Analyst': 11,
+                'Data Scientist Consultant': 12,
+                'BI Data Analyst': 13,
+                'Director of Data Science': 14,
+                'Research Scientist': 15,
+                'Machine Learning Manager': 16,
+                'Data Engineering Manager': 17,
+                'Machine Learning Infrastructure Engineer': 18,
+                'ML Engineer': 19,
+                'AI Scientist': 20,
+                'Computer Vision Engineer': 21,
+                'Principal Data Scientist': 22,
+                'Head of Data': 23,
+                '3D Computer Vision Researcher': 24,
+                'Applied Data Scientist': 25,
+                'Marketing Data Analyst': 26,
+        'cloud data engineer': 27,
+            'financial data analyst': 28,
+            'computer vision software engineer': 29,
+            'data science manager': 30,
+            'data analytics engineer': 31,
+            'applied machine learning scientist': 32,
+            'data specialist': 33,
+            'data science engineer': 34,
+            'big data architect': 35,
+            'head of data science': 36,
+            'analytics engineer': 37,
+            'data architect': 38,
+            'head of machine learning': 39,
+            'etl developer': 40,
+            'lead machine learning engineer': 41,
+            'machine learning developer': 42,
+            'principal data analyst': 43,
+            'nlp engineer': 44,
+            'data analytics lead': 45
+        }
+            job_title = job_title_mapping.get[data['job_title'].lower()]
         
-        input_data = pd.DataFrame([[work_year, experience_level, employment_type, job_title, salary_currency, salary_in_usd, employee_residence, remote_ratio, company_location, company_size]], columns=['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_currency', 'salary_in_usd', 'employee_residence', 'remote_ratio', 'company_location', 'company_size'])
-        input_data[self.features] = self.encoder.transform(input_data[self.features])
-        salary_probability = self.model.predict_proba(input_data)[:, 1]
-        return float(salary_probability)
-    
-    except ValueError as e:
-        return {'error': str(e)}, 400
-    
+            if job_title is None:
+                raise ValueError("Invalid job title")
+        
+            input_data = pd.DataFrame([[work_year, experience_level, job_title, salary_in_usd, remote_ratio]], columns=['work_year'] + self.features[1:])
+        
+            input_data[self.features] = self.encoder.transform(input_data[self.features])
+        
+            salary_probability = self.model.predict_proba(input_data)[:, 1]
+            return float(salary_probability)
+        except ValueError as e:
+            return {'error': str(e)}, 400
     
     @classmethod
     def get_instance(cls):
@@ -194,9 +154,9 @@ class Predict(Resource):
             parser.add_argument('employment_type', type=int, required=True)               
             parser.add_argument('job_title', type=str, required=True)
             parser.add_argument('salary_currency', type=str, required=True)
-            parser.add_argument('salary_in_usd', type=float, required=True)
+            parser.add_argument('salary_in_usd', type=int, required=True)
             parser.add_argument('employee_residence', type=str, required=True)
-            parser.add_argument('remote_ratio', type=float, required=True)
+            parser.add_argument('remote_ratio', type=int, required=True)
             parser.add_argument('company_location', type=str, required=True)
             parser.add_argument('company_size', type=str, required=True)
             args = parser.parse_args()
