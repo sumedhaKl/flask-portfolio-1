@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask
-from flask_restful import Api, Resource
+from flask_restful import Api, Resource, reqparse
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
@@ -42,7 +42,13 @@ class SalaryModel(Resource):
     
     def post(self):
         try:
-            input_features = pd.DataFrame([self.features], columns=self.features)
+            parser = reqparse.RequestParser()
+            parser.add_argument('work_year', type=float, required=True)
+            parser.add_argument('salary_in_usd', type=float, required=True)
+            parser.add_argument('remote_ratio', type=float, required=True)
+            args = parser.parse_args()
+            
+            input_features = pd.DataFrame([args], columns=self.features)
             
             probability = self.model.predict_proba(input_features)[0, 1]  # Get the probability for class 1
             return {'probability': probability}, 200
