@@ -15,22 +15,12 @@ class SalaryModel:
         self.encoder = OneHotEncoder(handle_unknown='ignore')
 
     def _clean(self):
-        # Load and preprocess data
         csv_file_path  = ('/home/sumi/vscode/flask-portfolio-1/ds_salaries.csv')
         self.salary_data = pd.read_csv(csv_file_path)
         self.salary_data['work_year'] = pd.to_numeric(self.salary_data['work_year'])
         self.salary_data['salary'] = pd.to_numeric(self.salary_data['salary'])
         self.salary_data['salary_in_usd'] = pd.to_numeric(self.salary_data['salary_in_usd'])
         self.salary_data['remote_ratio'] = pd.to_numeric(self.salary_data['remote_ratio'])
-
-        #Converting fields to category dtype for efficient memory usage and better performance for certain operations
-        #self.salary_data['experience_level'] = self.salary_data['experience_level'].astype('category')
-        #self.salary_data['employment_type'] = self.salary_data['employment_type'].astype('category')
-        #self.salary_data['job_title'] = self.salary_data['job_title'].astype('category')
-        #self.salary_data['salary_currency'] = self.salary_data['salary_currency'].astype('category')
-        #self.salary_data['employee_residence'] = self.salary_data['employee_residence'].astype('category')
-        #self.salary_data['company_location'] = self.salary_data['company_location'].astype('category')
-        #self.salary_data['company_size'] = self.salary_data['company_size'].astype('category')
 
         self.salary_data.dropna(inplace=True)
         
@@ -47,7 +37,6 @@ class SalaryModel:
 
     def predict(self, data):
         try:
-        # Predict salary probability
             work_year = float(data['work_year'])
             salary_in_usd = float(data['salary_in_usd'])
             remote_ratio = float(data['remote_ratio'])
@@ -61,19 +50,7 @@ class SalaryModel:
             experience_level = experience_level_mapping.get[data['experience_level'].lower()]
             if experience_level is None:
                 raise ValueError("Invalid experience level")
-        
-        # Map experience level to numerical values recognized by the model
-        #if experience_level == 'entry':
-        #    experience_level = 'EN'  # Map 'Entry Level' to 'EN'
-        #elif experience_level == 'mid':
-        #    experience_level = 'MI'  # Map 'Mid Level' to 'MI'
-        #elif experience_level == 'senior':
-        #    experience_level = 'SE'
-        #elif experience_level == 'expert':
-        #    experience_level = 'EX'  # Map 'Expert Level' to 'EX'
-        #else:
-        #    raise ValueError("Invalid experience level")
-            
+
             job_title_mapping = {
             'Data Scientist': 1,
             'Data Analyst': 2,
@@ -145,7 +122,6 @@ class SalaryModel:
 class Predict(Resource):
     def post(self):
         try:
-            # Parse incoming request data
             parser = reqparse.RequestParser()
             parser.add_argument('work_year', type=str, required=True)
             parser.add_argument('experience_level', type=str, required=True)
@@ -159,10 +135,7 @@ class Predict(Resource):
             parser.add_argument('company_size', type=str, required=True)
             args = parser.parse_args()
 
-            # Get singleton instance of SalaryModel
             salary_model = SalaryModel.get_instance()
-
-            # Predict salary
             salary_prob = salary_model.predict(args)
 
             return {'salary_probability': salary_prob}

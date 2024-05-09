@@ -8,7 +8,6 @@ app = Flask(__name__)
 salaries_api = Blueprint('salaries_api', __name__, url_prefix='/api/salaries')
 api = Api(salaries_api)
 
-# Load the dataset
 csv_file_path = "/home/sumi/vscode/flask-portfolio-1/ds_salaries.csv"
 df = pd.read_csv(csv_file_path)
 
@@ -17,7 +16,6 @@ class SalaryModel(Resource):
     _instance = None
     
     def __init__(self):
-        
         self.model = None
         self.features = ['work_year', 'salary_in_usd', 'remote_ratio']
         self.target = 'salary'
