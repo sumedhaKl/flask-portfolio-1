@@ -63,7 +63,6 @@ class TitanicModel:
         
     @classmethod
     def get_instance(cls):
-
         if cls._instance is None:
             cls._instance = cls()
         cls._instance._clean()
@@ -83,9 +82,9 @@ class TitanicModel:
 
         # predict the survival probability and extract the probabilities from
 
-        die, survive = np.squeeze(self.model.predict_proba(passenger_df))
+        dieProbability, surviveProbability = np.squeeze(self.model.predict_proba(passenger_df))
         # return the survival probabilities as a dictionary
-        return {'die': die, 'survive': survive}
+        return {'die': dieProbability, 'survive': surviveProbability}
     
     def feature_weights(self):
         importances = self.dt.feature_importances_
