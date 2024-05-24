@@ -8,7 +8,7 @@ app = Flask(__name__)
 salaries_api = Blueprint('salaries_api', __name__, url_prefix='/api/salaries')
 api = Api(salaries_api)
 
-csv_file_path = "/home/sumi/vscode/flask-portfolio-1/ds_salaries.csv"
+csv_file_path = "/home/kasm-user/vscode/flask-portfolio-1/ds_salaries.csv"
 df = pd.read_csv(csv_file_path)        
 
 class SalaryModel:

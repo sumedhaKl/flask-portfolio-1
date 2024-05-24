@@ -3,12 +3,62 @@ sys.path.append('/home/sumi/vscode/flask-portfolio-1')
 from flask import Flask, Blueprint, request, jsonify
 from flask_restful import Api, Resource, reqparse
 from flask_cors import CORS
-from model.salaries_model import SalaryModel
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import OneHotEncoder
 
 app = Flask(__name__)
-salaries_api = Blueprint('api', __name__, url_prefix='/api')
+salaries_api = Blueprint('salaries_api', __name__, url_prefix='/api/salaries')
 api = Api(salaries_api)
 CORS(salaries_api)
+
+class SalaryModel:
+
+    _instance = None
+
+    def __init__(self):
+        self.model = None
+        self.features = ['work_year', 'experience_level', 'employment_type', 'job_title', 'salary_in_usd', 'remote_ratio']
+        self.target = 'salary'
+        self.salary_data = pd.read_csv("/home/sumi/vscode/flask-portfolio-1/ds_salaries.csv")
+        self.encoder = OneHotEncoder(handle_unknown='ignore')
+
+        self._clean()
+        self._train()
+
+    def _clean(self):
+        self.salary_data.dropna(inplace=True)
+
+    def _train(self):
+        X = self.salary_data[self.features].copy()  # Make a copy of the DataFrame
+        y = self.salary_data[self.target]
+        self.encoder.fit(X[['experience_level', 'employment_type', 'job_title']])
+
+        X_encoded = self.encoder.transform(X[['experience_level', 'employment_type', 'job_title']]).toarray()
+        X = X.drop(['experience_level', 'employment_type', 'job_title'], axis=1)
+        X = pd.concat([X, pd.DataFrame(X_encoded)], axis=1)
+
+        self.model = LogisticRegression(max_iter=1000)
+        self.model.fit(X, y)
+
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
+
+    def predict_salary(self, input_data):
+        try:
+            input_features = pd.DataFrame([input_data], columns=self.features)
+            input_features_encoded = self.encoder.transform(input_features[['experience_level', 'employment_type', 'job_title']]).toarray()
+            input_features = input_features.drop(['experience_level', 'employment_type', 'job_title'], axis=1)
+            input_features = pd.concat([input_features, pd.DataFrame(input_features_encoded)], axis=1)
+            input_features.columns = input_features.columns.astype(str)
+
+            predicted_salary = self.model.predict(input_features)[0]
+            return {'predicted_salary': float(predicted_salary)}, 200
+        except Exception as e:
+            return {'error': str(e)}, 400
 
 class SalaryAPI:
     class _Predict(Resource):
@@ -20,7 +70,7 @@ class SalaryAPI:
                 parser.add_argument('employment_type', type=str, required=True)
                 parser.add_argument('job_title', type=str, required=True)
                 parser.add_argument('salary_currency', type=str, required=True)
-                parser.add_argument('salary_in_usd', type=float, required=True) 
+                parser.add_argument('salary_in_usd', type=float, required=True)
                 parser.add_argument('employee_residence', type=str, required=True)
                 parser.add_argument('remote_ratio', type=float, required=True)
                 parser.add_argument('company_location', type=str, required=True)
@@ -121,3 +171,9 @@ class SalaryAPI:
                 return jsonify(response), status_code
             except Exception as e:
                 return {'error': str(e)}, 400
+
+api.add_resource(SalaryAPI._Predict, '/predict')
+
+if __name__ == '__main__':
+    app.register_blueprint(salaries_api)
+    app.run(debug=True)
