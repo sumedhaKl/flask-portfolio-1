@@ -1,16 +1,6 @@
 import pandas as pd
-<<<<<<< HEAD
-
-app = Flask(__name__)
-salaries_api = Blueprint('salaries_api', __name__, url_prefix='/api/salaries')
-api = Api(salaries_api)
-
-csv_file_path = "/home/kasm-user/vscode/flask-portfolio-1/ds_salaries.csv"
-df = pd.read_csv(csv_file_path)        
-=======
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
->>>>>>> 3e91df6ee50f35d1bb61c9ad23d59840990f5bb7
 
 class SalaryModel:
     _instance = None
@@ -24,7 +14,7 @@ class SalaryModel:
         self._train()
 
     def _clean(self):
-        csv_file_path = '/home/sumi/vscode/flask-portfolio-1/ds_salaries.csv'
+        csv_file_path = '/home/kasm-user/vscode/flask-portfolio-1/ds_salaries.csv'
         self.salary_data = pd.read_csv(csv_file_path)
         self.salary_data.dropna(inplace=True)
         self.salary_data['work_year'] = pd.to_numeric(self.salary_data['work_year'])
