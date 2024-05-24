@@ -14,7 +14,7 @@ df = pd.read_csv(csv_file_path)
 class SalaryModel:
     
     _instance = None
-    
+
     def __init__(self):
         self.model = None
         self.features = ['work_year','salary_in_usd', 'remote_ratio']
@@ -25,17 +25,15 @@ class SalaryModel:
         self.encoder = encoder 
         
         self._clean()
-        self._train() 
-        
+        self._train()
+
     def _clean(self):
         self.salary_data.dropna(inplace=True)
-        
+
     def _train(self):
-        self.model = LogisticRegression(max_iter=1000)
-        
         X = self.salary_data[self.features]
         y = self.salary_data[self.target]
-        
+        self.model = LogisticRegression(max_iter=1000)
         self.model.fit(X, y)
         
     def predict_salary(self, input_data):

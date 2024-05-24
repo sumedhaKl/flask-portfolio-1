@@ -127,6 +127,7 @@ class SalaryModel:
             cls._instance = cls()
         return cls._instance
 
+<<<<<<< HEAD
 class Predict(Resource):
     def post(self):
         try:
@@ -155,3 +156,8 @@ api.add_resource(Predict, '/predict')
 if __name__ == "__main__":
     app.register_blueprint(salaries_api)
     app.run(debug=True)
+=======
+                return jsonify(response), status_code
+            except Exception as e:
+                return {'error': str(e)}, 400
+>>>>>>> 535a8a7c1d3df908b6f8ce29cbeb7950c7af8238
